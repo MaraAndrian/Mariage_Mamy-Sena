@@ -67,25 +67,57 @@
             font-size: 0.8rem;
             margin: 0.5rem 0;
         }
+        
+        /* SKELETON LOADER - CACHÉ PAR DÉFAUT */
         .photo-couple {
             width: 100%;
             height: 260px;
             background: #e6dfd5;
             margin: 1rem 0;
-            background-image: url('Mamy_Sena_1016.jpg');
             background-size: cover;
             background-position: center;
             border: 1px solid #d4c9bc;
             border-radius: 4px;
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .skeleton-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #e6dfd5 25%, #f0ebe3 50%, #e6dfd5 75%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        @keyframes skeletonLoading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton-loader.hidden {
+            display: none;
+        }
+        .skeleton-text {
+            color: #9b8a7a;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            background: rgba(255,255,255,0.7);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
         }
         .photo-couple:hover {
             transform: scale(1.02);
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
-        /* MODAL POUR AGRANDIR L'IMAGE - VERSION CORRIGÉE */
+        /* MODAL POUR AGRANDIR L'IMAGE */
         .modal {
             display: none;
             position: fixed;
@@ -142,12 +174,6 @@
         @keyframes captionFadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        .modal-caption span {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            margin: 0 5px;
         }
         .modal-close {
             position: absolute;
@@ -526,7 +552,11 @@
         </div>
         <div class="church">Cathédrale de l’Immaculée Conception Andohalo</div>
         <div class="date">18.04.2026</div>
-        <div class="photo-couple" id="photoCouple"></div>
+        <div class="photo-couple" id="photoCouple">
+            <div class="skeleton-loader hidden" id="skeletonLoader">
+                <span class="skeleton-text">✿ Chargement photo ✿</span>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL POUR AGRANDIR L'IMAGE AVEC TITRE -->
@@ -872,23 +902,56 @@ Rester et devenir veilleur
 </div>
 
 <script>
+    // ==================== CHARGEMENT DE L'IMAGE AVEC SKELETON CACHÉ PAR DÉFAUT ====================
+    const photoCoupleDiv = document.getElementById('photoCouple');
+    const skeletonLoader = document.getElementById('skeletonLoader');
+    const imgUrl = 'Mamy_Sena_1016.jpg';
+
+    // Le skeleton est déjà caché par la classe "hidden" dans le HTML
+    let loadingTimeout = null;
+    let imageLoaded = false;
+
+    // Fonction pour afficher le skeleton seulement si le chargement est anormalement long
+    function showSkeletonIfSlow() {
+        if (!imageLoaded) {
+            skeletonLoader.classList.remove('hidden');
+        }
+    }
+
+    // Démarrer le timeout (2 secondes - si l'image n'est pas chargée après 2s, on affiche le loader)
+    loadingTimeout = setTimeout(showSkeletonIfSlow, 2000);
+
+    // Créer une image temporaire pour précharger
+    const tempImage = new Image();
+
+    tempImage.onload = function() {
+        imageLoaded = true;
+        // Annuler le timeout
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        // Cacher le skeleton s'il est visible
+        skeletonLoader.classList.add('hidden');
+        // Appliquer l'image
+        photoCoupleDiv.style.backgroundImage = `url('${imgUrl}')`;
+    };
+
+    tempImage.onerror = function() {
+        imageLoaded = true;
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        skeletonLoader.classList.add('hidden');
+        // Image par défaut si erreur
+        photoCoupleDiv.style.backgroundColor = '#e6dfd5';
+    };
+
+    // Démarrer le chargement
+    tempImage.src = imgUrl;
+
     // ==================== MODAL POUR L'IMAGE DU COUPLE ====================
-    const photoCouple = document.getElementById('photoCouple');
     const modal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     const modalClose = document.querySelector('.modal-close');
     
     function openModal() {
-        let bgImage = photoCouple.style.backgroundImage;
-        if (!bgImage || bgImage === 'none') {
-            bgImage = "url('Mamy_Sena_1016.jpg')";
-        }
-        const urlMatch = bgImage.match(/url\(["']?([^"')]+)["']?\)/);
-        if (urlMatch && urlMatch[1]) {
-            modalImage.src = urlMatch[1];
-        } else {
-            modalImage.src = 'Mamy_Sena_1016.jpg';
-        }
+        modalImage.src = imgUrl;
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -898,7 +961,7 @@ Rester et devenir veilleur
         document.body.style.overflow = '';
     }
     
-    photoCouple.addEventListener('click', openModal);
+    photoCoupleDiv.addEventListener('click', openModal);
     modalClose.addEventListener('click', closeModal);
     modal.addEventListener('click', function(e) {
         if (e.target === modal || e.target.classList.contains('modal-content-wrapper')) {
@@ -1065,12 +1128,9 @@ Rester et devenir veilleur
         header.addEventListener('click', (e) => {
             e.stopPropagation();
             
-            // Ouvrir ou fermer l'accordéon (sans fermer les autres)
             item.classList.toggle('open');
             
-            // Scroll fluide vers l'accordéon ouvert (seulement si on l'ouvre, pas si on le ferme)
             if (item.classList.contains('open')) {
-                // Délai plus long pour que l'animation d'ouverture soit visible
                 setTimeout(() => {
                     smoothScrollToElement(item, 90);
                 }, 150);
