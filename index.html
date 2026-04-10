@@ -20,6 +20,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Mistral&display=swap');
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         .container {
             max-width: 700px;
             margin: 0 auto;
@@ -104,9 +108,17 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .modal-content {
+        .modal-content-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             max-width: 90%;
             max-height: 90%;
+        }
+        .modal-content {
+            max-width: 100%;
+            max-height: 85%;
             object-fit: contain;
             border-radius: 8px;
             box-shadow: 0 0 30px rgba(0,0,0,0.3);
@@ -115,6 +127,25 @@
         @keyframes modalZoom {
             from { transform: scale(0.9); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
+        }
+        .modal-caption {
+            margin-top: 15px;
+            font-family: 'Mistral', cursive;
+            font-size: 1.3rem;
+            color: #faf7f2;
+            text-align: center;
+            letter-spacing: 2px;
+            animation: captionFadeIn 0.4s ease 0.2s both;
+        }
+        @keyframes captionFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-caption span {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin: 0 5px;
         }
         .modal-close {
             position: absolute;
@@ -139,6 +170,10 @@
             margin: 2rem 0 1.5rem;
             border-bottom: 1px solid #e2d9d0;
             padding-bottom: 0.5rem;
+            position: sticky;
+            top: 0;
+            background: #faf7f2;
+            z-index: 100;
         }
         .tab-btn {
             font-family: 'Montserrat', sans-serif;
@@ -221,6 +256,8 @@
             overflow: hidden;
             background: white;
             position: relative;
+            transition: box-shadow 0.3s ease;
+            scroll-margin-top: 80px;
         }
         .accordion-item::before {
             content: "❁";
@@ -471,6 +508,8 @@
             .floral-bg { width: 70px; height: 70px; }
             .map-container { min-height: 380px; }
             .legend-item { font-size: 0.55rem; }
+            .accordion-item { scroll-margin-top: 100px; }
+            .modal-caption { font-size: 1rem; }
         }
     </style>
 </head>
@@ -487,10 +526,13 @@
         <div class="photo-couple" id="photoCouple"></div>
     </div>
 
-    <!-- MODAL POUR AGRANDIR L'IMAGE -->
+    <!-- MODAL POUR AGRANDIR L'IMAGE AVEC TITRE -->
     <div id="imageModal" class="modal">
         <span class="modal-close">&times;</span>
-        <img class="modal-content" id="modalImage">
+        <div class="modal-content-wrapper">
+            <img class="modal-content" id="modalImage">
+            <div class="modal-caption">Mamy ✦ Sena</div>
+        </div>
     </div>
 
     <div class="tabs">
@@ -535,8 +577,11 @@
         <div class="paroles-section">
             <div class="paroles-title">Paroles des chants & prières</div>
 
-            <div class="accordion-item"><div class="accordion-header">✿ Injay fa miantso ahy <span>+</span></div><div class="accordion-content"><div class="chant-content">
-                <div class="floral-bg floral-bg-bottom-right" style="background-image: url('f1.png');"></div>
+            <!-- Injay fa miantso ahy -->
+            <div class="accordion-item" id="chant-injay">
+                <div class="accordion-header">✿ Injay fa miantso ahy <span>+</span></div>
+                <div class="accordion-content"><div class="chant-content">
+                    <div class="floral-bg floral-bg-bottom-right" style="background-image: url('f1.png');"></div>
 Injay fa miantso ahy, ny feon’ny fitiavana
 Manohina ny fiainako, ka tsy azoko handosirana
 Mahery vaika mantsy
@@ -557,10 +602,14 @@ Handefa tonom-bavaka.
 Ity havana hiainga mba hiatrika ny adidy
 Fa any ho any kosa hahatsiaro anareo aho
 <strong>Mba tsofy rano tsara re…</strong>
-            </div></div></div>
+                </div></div>
+            </div>
 
-            <div class="accordion-item"><div class="accordion-header">✿ Natsangan-dRae ho zandrinao añay <span>+</span></div><div class="accordion-content"><div class="chant-content">
-                <div class="floral-bg floral-bg-top-left" style="background-image: url('f2.png');"></div>
+            <!-- Natsangan-dRae -->
+            <div class="accordion-item" id="chant-natsangan">
+                <div class="accordion-header">✿ Natsangan-dRae ho zandrinao añay <span>+</span></div>
+                <div class="accordion-content"><div class="chant-content">
+                    <div class="floral-bg floral-bg-top-left" style="background-image: url('f2.png');"></div>
 1 Natsangan-dRae ho zandrinao añay,
 Mba hiombon-kafaleana aminao.
 Añay e ro tsa niteno raha:
@@ -578,10 +627,14 @@ Izay tokoa ro fara fitiavana.
 Ny anay ny teña mady ro fatatsay e:
 Tsa tea maro, tsa te hiadañan'ny hafa.
 <strong>Tompo ô, mamindrà fo aminay.</strong>
-            </div></div></div>
+                </div></div>
+            </div>
 
-            <div class="accordion-item"><div class="accordion-header">✿ Mofo madio tsy misy lalivay <span>+</span></div><div class="accordion-content"><div class="chant-content">
-                <div class="floral-bg floral-bg-center" style="background-image: url('f3.png');"></div>
+            <!-- Mofo madio -->
+            <div class="accordion-item" id="chant-mofo">
+                <div class="accordion-header">✿ Mofo madio tsy misy lalivay <span>+</span></div>
+                <div class="accordion-content"><div class="chant-content">
+                    <div class="floral-bg floral-bg-center" style="background-image: url('f3.png');"></div>
 1 - Mofo madio tsy misy lalivay,
 No atolotray Anao
 Mba ekeo, ry Ray, 'ty tolotray,
@@ -599,20 +652,28 @@ Mba ho Ràn’ilay Zanakao
 Ka afoiny eto indray izao!
 Hamonjy anay mandrakizay
 Ka mba raiso, ry Ray.
-            </div></div></div>
+                </div></div>
+            </div>
 
-            <div class="accordion-item"><div class="accordion-header">✿ Homba antsika mianakavy anie <span>+</span></div><div class="accordion-content"><div class="chant-content">
-                <div class="floral-bg floral-bg-top-right" style="background-image: url('f4.png');"></div>
+            <!-- Homba antsika -->
+            <div class="accordion-item" id="chant-homba">
+                <div class="accordion-header">✿ Homba antsika mianakavy anie <span>+</span></div>
+                <div class="accordion-content"><div class="chant-content">
+                    <div class="floral-bg floral-bg-top-right" style="background-image: url('f4.png');"></div>
 1 Homba antsika mianakavy anie ny fiadanan'i Kristy e! (inefatra)
 
 2 Hampifankatia antsika anie ny fiadanan'i Kristy e! (inefatra)
 <strong>Fiadanana, fiadanana,</strong>
 <strong>Fiadanan'i Kristy (indroa)</strong>
 <strong>Fiadanana mandrakizay</strong>
-            </div></div></div>
+                </div></div>
+            </div>
 
-            <div class="accordion-item"><div class="accordion-header">✿ Anak'Agnondrin'Andrianagnahary <span>+</span></div><div class="accordion-content"><div class="chant-content">
-                <div class="floral-bg floral-bg-bottom-left" style="background-image: url('f5.png');"></div>
+            <!-- Anak'Agnondrin -->
+            <div class="accordion-item" id="chant-anak">
+                <div class="accordion-header">✿ Anak'Agnondrin'Andrianagnahary <span>+</span></div>
+                <div class="accordion-content"><div class="chant-content">
+                    <div class="floral-bg floral-bg-bottom-left" style="background-image: url('f5.png');"></div>
 1 - Anak'Agnondrin'Andrianagnahary e, Raoke,
 Iha ro nandrombaky ndaty aby toy
 Tsy ho trobo mandrakizay
@@ -627,10 +688,14 @@ Tsy ho trobo mandrakizay
 Iha ro nandrombaky ndaty aby toy
 Tsy ho trobo mandrakizay
 <strong>Tahio izahay, Omeo fiadagnana e (2)</strong>
-            </div></div></div>
+                </div></div>
+            </div>
 
-            <div class="accordion-item"><div class="accordion-header">✿ Indray hariva izay <span>+</span></div><div class="accordion-content"><div class="chant-content">
-                <div class="floral-bg floral-bg-bottom-right" style="background-image: url('f6.png');"></div>
+            <!-- Indray hariva -->
+            <div class="accordion-item" id="chant-indray">
+                <div class="accordion-header">✿ Indray hariva izay <span>+</span></div>
+                <div class="accordion-content"><div class="chant-content">
+                    <div class="floral-bg floral-bg-bottom-right" style="background-image: url('f6.png');"></div>
 1. Indray hariva izay ry Jesoa Tompo o
 Nanolo-tena Ianao ho fitiavana anay
 
@@ -643,10 +708,14 @@ Ka tonga Vatanao sy Ranao mpanadio
 
 3. Fa velona Izy Ray, velona ao Aminy Ianao
 Ka velona ao Aminao izay mandray Anao
-            </div></div></div>
+                </div></div>
+            </div>
 
-            <div class="accordion-item"><div class="accordion-header">✿ Matoa gn'olo mifiopioke <span>+</span></div><div class="accordion-content"><div class="chant-content">
-                <div class="floral-bg floral-bg-top-left" style="background-image: url('f7.png');"></div>
+            <!-- Matoa -->
+            <div class="accordion-item" id="chant-matoa">
+                <div class="accordion-header">✿ Matoa gn'olo mifiopioke <span>+</span></div>
+                <div class="accordion-content"><div class="chant-content">
+                    <div class="floral-bg floral-bg-top-left" style="background-image: url('f7.png');"></div>
 <strong>Fiv:</strong>
 <strong>Matoa gn’olo mifiopioke ie te hiantsa zay e !</strong>
 <strong>Fa gny soa nataonao anay, lako zay e !</strong>
@@ -663,10 +732,14 @@ Misaotse Anao,misaotse Anao bevata gny vitanao
 Ka ataonay ahoa gny tsy hisaotse Anao ?
 Misaotse Anao, misaotse Anao, lisatsy lehe zao
 Misaotse Anao, misaotse Anao, lisatsy lehe zao
-            </div></div></div>
+                </div></div>
+            </div>
 
-            <div class="accordion-item"><div class="accordion-header">✿ Trouver dans ma vie ta présence <span>+</span></div><div class="accordion-content"><div class="chant-content">
-                <div class="floral-bg floral-bg-center" style="background-image: url('f8.png');"></div>
+            <!-- Trouver dans ma vie -->
+            <div class="accordion-item" id="chant-trouver">
+                <div class="accordion-header">✿ Trouver dans ma vie ta présence <span>+</span></div>
+                <div class="accordion-content"><div class="chant-content">
+                    <div class="floral-bg floral-bg-center" style="background-image: url('f8.png');"></div>
 <strong>Trouver dans ma vie ta présence</strong>
 <strong>Tenir une lampe allumée</strong>
 <strong>Choisir d'habiter la confiance</strong>
@@ -686,7 +759,8 @@ Fêter le retour d'un enfant
 Briser les verrous de la peur
 Savoir tout ce que tu m'apportes
 Rester et devenir veilleur
-            </div></div></div>
+                </div></div>
+            </div>
         </div>
 
         <div class="photo-order">
@@ -801,15 +875,11 @@ Rester et devenir veilleur
     const modalImage = document.getElementById('modalImage');
     const modalClose = document.querySelector('.modal-close');
     
-    // Fonction pour ouvrir le modal avec l'image
     function openModal() {
-        // Récupère l'URL de l'image de fond
         let bgImage = photoCouple.style.backgroundImage;
         if (!bgImage || bgImage === 'none') {
-            // Si pas d'image personnalisée, utiliser l'image par défaut
             bgImage = "url('https://placehold.co/700x400/faf7f2/d4c9bc?text=Votre+photo+ici')";
         }
-        // Extraire l'URL de background-image
         const urlMatch = bgImage.match(/url\(["']?([^"')]+)["']?\)/);
         if (urlMatch && urlMatch[1]) {
             modalImage.src = urlMatch[1];
@@ -820,31 +890,39 @@ Rester et devenir veilleur
         document.body.style.overflow = 'hidden';
     }
     
-    // Fermer le modal
     function closeModal() {
         modal.classList.remove('active');
         document.body.style.overflow = '';
     }
     
-    // Écouteurs d'événements
     photoCouple.addEventListener('click', openModal);
     modalClose.addEventListener('click', closeModal);
     modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
+        if (e.target === modal || e.target.classList.contains('modal-content-wrapper')) {
             closeModal();
         }
     });
     
-    // Fermer avec la touche Echap
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.classList.contains('active')) {
             closeModal();
         }
     });
 
-    // ==================== ONGLETS ====================
+    // ==================== ONGLETS AVEC SCROLL FLUIDE ====================
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
+    
+    function smoothScrollToElement(element, offset = 80) {
+        if (!element) return;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
     
     // Références pour l'animation du trajet
     let currentAnimationFrame = null;
@@ -953,28 +1031,47 @@ Rester et devenir veilleur
         currentAnimationStarted = true;
     }
     
-    // Gestion des clics sur les onglets
+    // Gestion des clics sur les onglets avec scroll fluide
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const tabId = btn.dataset.tab;
+            
             tabBtns.forEach(b => b.classList.remove('active'));
             tabContents.forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById(tabId).classList.add('active');
             
+            const targetContent = document.getElementById(tabId);
+            if (targetContent) {
+                setTimeout(() => {
+                    smoothScrollToElement(targetContent, 70);
+                }, 100);
+            }
+            
             if (tabId === 'trajet') {
                 setTimeout(() => {
                     startTrajetAnimation();
-                }, 100);
+                }, 200);
             }
         });
     });
 
-    // Accordéon
+    // ==================== ACCORDÉON AVEC SCROLL TRÈS FLUIDE ====================
     document.querySelectorAll('.accordion-item').forEach(item => {
         const header = item.querySelector('.accordion-header');
-        header.addEventListener('click', () => {
+        header.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Ouvrir ou fermer l'accordéon (sans fermer les autres)
             item.classList.toggle('open');
+            
+            // Scroll fluide vers l'accordéon ouvert (seulement si on l'ouvre, pas si on le ferme)
+            if (item.classList.contains('open')) {
+                // Délai plus long pour que l'animation d'ouverture soit visible
+                setTimeout(() => {
+                    smoothScrollToElement(item, 90);
+                }, 150);
+            }
         });
     });
     
