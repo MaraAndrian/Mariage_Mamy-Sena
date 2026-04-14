@@ -1004,48 +1004,20 @@ Rester et devenir veilleur
         }
     });
 
-    // ==================== SCROLL TRÈS LÉGÈREMENT RALENTI (380ms au lieu de 300-350ms) ====================
-    let currentScrollAnimation = null;
-    
-    function smoothScrollToElement(element, offset = 80, duration = 380) {
-        if (!element) return;
-        
-        if (currentScrollAnimation) {
-            cancelAnimationFrame(currentScrollAnimation);
-            currentScrollAnimation = null;
-        }
-        
-        const startPosition = window.pageYOffset;
-        const elementPosition = element.getBoundingClientRect().top;
-        const targetPosition = elementPosition + startPosition - offset;
-        
-        const startTime = performance.now();
-        
-        function easeOutQuad(t) {
-            return t * (2 - t);
-        }
-        
-        function animateScroll(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(1, elapsed / duration);
-            const easeProgress = easeOutQuad(progress);
-            
-            const newPosition = startPosition + (targetPosition - startPosition) * easeProgress;
-            window.scrollTo(0, newPosition);
-            
-            if (progress < 1) {
-                currentScrollAnimation = requestAnimationFrame(animateScroll);
-            } else {
-                currentScrollAnimation = null;
-            }
-        }
-        
-        currentScrollAnimation = requestAnimationFrame(animateScroll);
-    }
-    
     // ==================== ONGLETS AVEC SCROLL FLUIDE ====================
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
+    
+    function smoothScrollToElement(element, offset = 80) {
+        if (!element) return;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
     
     let currentAnimationFrame = null;
     let currentAnimationStarted = false;
@@ -1165,8 +1137,8 @@ Rester et devenir veilleur
             const targetContent = document.getElementById(tabId);
             if (targetContent) {
                 setTimeout(() => {
-                    smoothScrollToElement(targetContent, 70, 380);
-                }, 80);
+                    smoothScrollToElement(targetContent, 70);
+                }, 100);
             }
             
             if (tabId === 'trajet') {
@@ -1182,12 +1154,11 @@ Rester et devenir veilleur
         header.addEventListener('click', (e) => {
             e.stopPropagation();
             
-            const wasOpen = item.classList.contains('open');
             item.classList.toggle('open');
             
-            if (!wasOpen && item.classList.contains('open')) {
+            if (item.classList.contains('open')) {
                 setTimeout(() => {
-                    smoothScrollToElement(item, 90, 380);
+                    smoothScrollToElement(item, 90);
                 }, 150);
             }
         });
