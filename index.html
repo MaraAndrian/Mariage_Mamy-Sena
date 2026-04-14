@@ -1004,10 +1004,10 @@ Rester et devenir veilleur
         }
     });
 
-    // ==================== SCROLL TRÈS FLUIDE ET LENT ====================
+    // ==================== SCROLL TRÈS FLUIDE ET RALENTI ====================
     let currentScrollAnimation = null;
     
-    function smoothScrollToElement(element, offset = 80, duration = 800) {
+    function smoothScrollToElement(element, offset = 80, duration = 1000) {
         if (!element) return;
         
         // Annuler l'animation de scroll précédente
@@ -1022,14 +1022,15 @@ Rester et devenir veilleur
         
         const startTime = performance.now();
         
-        function easeInOutCubic(t) {
-            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        // Fonction d'accélération plus douce (easeInOutQuad)
+        function easeInOutQuad(t) {
+            return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
         }
         
         function animateScroll(currentTime) {
             const elapsed = currentTime - startTime;
             const progress = Math.min(1, elapsed / duration);
-            const easeProgress = easeInOutCubic(progress);
+            const easeProgress = easeInOutQuad(progress);
             
             const newPosition = startPosition + (targetPosition - startPosition) * easeProgress;
             window.scrollTo(0, newPosition);
@@ -1154,7 +1155,7 @@ Rester et devenir veilleur
         currentAnimationStarted = true;
     }
     
-    // Gestion des clics sur les onglets avec scroll très fluide
+    // Gestion des clics sur les onglets avec scroll très fluide et ralenti
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const tabId = btn.dataset.tab;
@@ -1166,9 +1167,9 @@ Rester et devenir veilleur
             
             const targetContent = document.getElementById(tabId);
             if (targetContent) {
-                // Scroll plus lent et plus fluide (800ms)
+                // Scroll ralenti avec durée de 900ms
                 setTimeout(() => {
-                    smoothScrollToElement(targetContent, 70, 800);
+                    smoothScrollToElement(targetContent, 70, 900);
                 }, 80);
             }
             
@@ -1180,7 +1181,7 @@ Rester et devenir veilleur
         });
     });
 
-    // Accordéon avec scroll très fluide
+    // Accordéon avec scroll très fluide et ralenti
     document.querySelectorAll('.accordion-item').forEach(item => {
         const header = item.querySelector('.accordion-header');
         header.addEventListener('click', (e) => {
@@ -1190,9 +1191,9 @@ Rester et devenir veilleur
             item.classList.toggle('open');
             
             if (!wasOpen && item.classList.contains('open')) {
-                // Scroll plus lent vers l'accordéon ouvert (700ms)
+                // Scroll ralenti avec durée de 800ms
                 setTimeout(() => {
-                    smoothScrollToElement(item, 90, 700);
+                    smoothScrollToElement(item, 90, 800);
                 }, 200);
             }
         });
