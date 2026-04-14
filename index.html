@@ -1004,20 +1004,49 @@ Rester et devenir veilleur
         }
     });
 
+    // ==================== SCROLL TRÈS FLUIDE ET LENT ====================
+    let currentScrollAnimation = null;
+    
+    function smoothScrollToElement(element, offset = 80, duration = 800) {
+        if (!element) return;
+        
+        // Annuler l'animation de scroll précédente
+        if (currentScrollAnimation) {
+            cancelAnimationFrame(currentScrollAnimation);
+            currentScrollAnimation = null;
+        }
+        
+        const startPosition = window.pageYOffset;
+        const elementPosition = element.getBoundingClientRect().top;
+        const targetPosition = elementPosition + startPosition - offset;
+        
+        const startTime = performance.now();
+        
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+        
+        function animateScroll(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(1, elapsed / duration);
+            const easeProgress = easeInOutCubic(progress);
+            
+            const newPosition = startPosition + (targetPosition - startPosition) * easeProgress;
+            window.scrollTo(0, newPosition);
+            
+            if (progress < 1) {
+                currentScrollAnimation = requestAnimationFrame(animateScroll);
+            } else {
+                currentScrollAnimation = null;
+            }
+        }
+        
+        currentScrollAnimation = requestAnimationFrame(animateScroll);
+    }
+    
     // ==================== ONGLETS AVEC SCROLL FLUIDE ====================
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
-    
-    function smoothScrollToElement(element, offset = 80) {
-        if (!element) return;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-        
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-        });
-    }
     
     let currentAnimationFrame = null;
     let currentAnimationStarted = false;
@@ -1125,6 +1154,7 @@ Rester et devenir veilleur
         currentAnimationStarted = true;
     }
     
+    // Gestion des clics sur les onglets avec scroll très fluide
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const tabId = btn.dataset.tab;
@@ -1136,34 +1166,39 @@ Rester et devenir veilleur
             
             const targetContent = document.getElementById(tabId);
             if (targetContent) {
+                // Scroll plus lent et plus fluide (800ms)
                 setTimeout(() => {
-                    smoothScrollToElement(targetContent, 70);
-                }, 100);
+                    smoothScrollToElement(targetContent, 70, 800);
+                }, 80);
             }
             
             if (tabId === 'trajet') {
                 setTimeout(() => {
                     startTrajetAnimation();
-                }, 200);
+                }, 300);
             }
         });
     });
 
+    // Accordéon avec scroll très fluide
     document.querySelectorAll('.accordion-item').forEach(item => {
         const header = item.querySelector('.accordion-header');
         header.addEventListener('click', (e) => {
             e.stopPropagation();
             
+            const wasOpen = item.classList.contains('open');
             item.classList.toggle('open');
             
-            if (item.classList.contains('open')) {
+            if (!wasOpen && item.classList.contains('open')) {
+                // Scroll plus lent vers l'accordéon ouvert (700ms)
                 setTimeout(() => {
-                    smoothScrollToElement(item, 90);
-                }, 150);
+                    smoothScrollToElement(item, 90, 700);
+                }, 200);
             }
         });
     });
     
+    // Observer pour démarrer l'animation quand l'onglet trajet devient visible
     const trajetObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting && document.getElementById('trajet').classList.contains('active')) {
