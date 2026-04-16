@@ -5,572 +5,332 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Mamy & Fandresena · Mariage 18 Avril 2026</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #faf7f2;
-            font-family: 'Montserrat', sans-serif;
-            color: #1e1b1a;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #faf7f2; font-family: 'Montserrat', sans-serif; color: #1e1b1a; }
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Mistral&display=swap');
+        html { scroll-behavior: smooth; }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        .container { max-width: 700px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem 4rem;
-        }
+        /* HERO */
+        .hero { text-align: center; margin-bottom: 2rem; }
+        .hero .verse { font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 0.75rem; color: #5a4a3a; margin: 1rem 0; }
+        .hero .title-line { display: flex; justify-content: center; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+        .hero h1, .hero h2 { font-family: 'Mistral', cursive; font-size: 2.8rem; font-weight: 400; color: #1e1b1a; letter-spacing: 2px; }
+        .hero .church { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; }
+        .hero .date { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; margin: 0.5rem 0; }
 
-        .hero {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .hero .verse {
-            font-family: 'Montserrat', sans-serif;
-            font-style: italic;
-            font-size: 0.75rem;
-            color: #5a4a3a;
-            margin: 1rem 0;
-        }
-        .hero .title-line {
+        /* PHOTO COUPLE */
+        .photo-couple { width: 100%; height: 260px; background: #e6dfd5; margin: 1rem 0; background-size: cover; background-position: center; border: 1px solid #d4c9bc; border-radius: 4px; cursor: pointer; position: relative; overflow: hidden; opacity: 0; transform: scale(0.98); transition: opacity 0.8s cubic-bezier(0.2,0.9,0.4,1.1), transform 0.8s cubic-bezier(0.2,0.9,0.4,1.1), box-shadow 0.3s ease; }
+        .photo-couple.image-loaded { opacity: 1; transform: scale(1); }
+        .photo-couple::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.6s ease; pointer-events: none; }
+        .photo-couple:hover::after { left: 150%; }
+        .photo-couple:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .skeleton-loader { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, #e6dfd5 25%, #f0ebe3 50%, #e6dfd5 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; display: flex; align-items: center; justify-content: center; z-index: 2; }
+        @keyframes skeletonLoading { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .skeleton-loader.hidden { display: none; }
+        .skeleton-text { color: #9b8a7a; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; background: rgba(255,255,255,0.7); padding: 0.3rem 0.8rem; border-radius: 20px; }
+
+        /* MODAL IMAGE COUPLE */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); z-index: 1000; cursor: pointer; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal.active { display: flex; animation: modalFadeIn 0.3s ease; }
+        @keyframes modalFadeIn { from{opacity:0} to{opacity:1} }
+        .modal-content-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; max-width: 90vw; max-height: 90vh; }
+        .modal-content { max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.3); animation: modalZoom 0.3s ease; }
+        @keyframes modalZoom { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+        .modal-caption { margin-top: 15px; font-family: 'Mistral', cursive; font-size: 1.3rem; color: #faf7f2; text-align: center; letter-spacing: 2px; animation: captionFadeIn 0.4s ease 0.2s both; }
+        @keyframes captionFadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .modal-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; transition: 0.3s; z-index: 1001; font-family: Arial, sans-serif; }
+        .modal-close:hover { color: #b28b5e; }
+
+        /* ========== MODAL TABLE ========== */
+        .table-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .table-modal.active { display: flex; animation: modalFadeIn 0.3s ease; }
+
+        .table-modal-outer {
             display: flex;
-            justify-content: center;
-            align-items: baseline;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        .hero h1, .hero h2 {
-            font-family: 'Mistral', cursive;
-            font-size: 2.8rem;
-            font-weight: 400;
-            color: #1e1b1a;
-            letter-spacing: 2px;
-        }
-        .hero .church {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 0.5rem;
-        }
-        .hero .date {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            margin: 0.5rem 0;
-        }
-        
-        /* PHOTO COUPLE AVEC ANIMATION ÉLÉGANTE */
-        .photo-couple {
-            width: 100%;
-            height: 260px;
-            background: #e6dfd5;
-            margin: 1rem 0;
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #d4c9bc;
-            border-radius: 4px;
-            cursor: pointer;
+            align-items: stretch;
+            gap: 0;
             position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: scale(0.98);
-            transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.3s ease, box-shadow 0.3s ease;
+            animation: modalZoom 0.3s ease;
+            max-width: 85vw;
+            width: auto;
         }
-        
-        .photo-couple.image-loaded {
-            opacity: 1;
-            transform: scale(1);
+
+        .table-modal-card {
+            background: #f8f4ee;
+            border-radius: 12px;
+            width: 75vw;
+            max-width: 550px;
+            min-width: 300px;
+            padding: 1.8rem 1.8rem 1.8rem 1.8rem;
+            position: relative;
+            box-shadow: 0 8px 35px rgba(0,0,0,0.35);
+            z-index: 2;
+            overflow: visible;
         }
-        
-        .photo-couple::after {
+
+        .table-modal-card::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            transition: left 0.6s ease;
-            pointer-events: none;
-        }
-        
-        .photo-couple:hover::after {
-            left: 150%;
-        }
-        
-        .photo-couple:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        
-        .skeleton-loader {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #e6dfd5 25%, #f0ebe3 50%, #e6dfd5 75%);
-            background-size: 200% 100%;
-            animation: skeletonLoading 1.5s infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
-        @keyframes skeletonLoading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        .skeleton-loader.hidden {
-            display: none;
-        }
-        .skeleton-text {
-            color: #9b8a7a;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            background: rgba(255,255,255,0.7);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-        }
-
-        /* MODAL POUR AGRANDIR L'IMAGE */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            z-index: 1000;
-            cursor: pointer;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .modal.active {
-            display: flex;
-            animation: modalFadeIn 0.3s ease;
-        }
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .modal-content-wrapper {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 90vw;
-            max-height: 90vh;
-        }
-        .modal-content {
-            max-width: 100%;
-            max-height: 85vh;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.3);
-            animation: modalZoom 0.3s ease;
-        }
-        @keyframes modalZoom {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .modal-caption {
-            margin-top: 15px;
-            font-family: 'Mistral', cursive;
-            font-size: 1.3rem;
-            color: #faf7f2;
-            text-align: center;
-            letter-spacing: 2px;
-            animation: captionFadeIn 0.4s ease 0.2s both;
-        }
-        @keyframes captionFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            z-index: 1001;
-            font-family: Arial, sans-serif;
-        }
-        .modal-close:hover {
-            color: #b28b5e;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 2rem 0 1.5rem;
-            border-bottom: 1px solid #e2d9d0;
-            padding-bottom: 0.5rem;
-            position: sticky;
-            top: 0;
-            background: #faf7f2;
-            z-index: 100;
-        }
-        .tab-btn {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 0.8rem;
-            background: none;
-            border: none;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            color: #9b8a7a;
-            transition: all 0.3s ease;
-            border-radius: 30px;
-        }
-        .tab-btn.active {
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
             background: #1e1b1a;
-            color: #faf7f2;
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            border: 2px solid #d4c9bc;
+            z-index: 3;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
         }
 
-        .programme-liste {
-            background: white;
-            border: 1px solid #e2d9d0;
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+        .table-modal-card .floral-bg-modal-tr {
+            position: absolute; width: 100px; height: 100px;
+            opacity: 0.12; pointer-events: none;
+            background-size: contain; background-repeat: no-repeat;
+            z-index: 0; top: 15px; right: 15px;
+            background-image: url('m1.png');
         }
-        .programme-liste h3 {
-            font-family: 'Mistral', cursive;
-            font-size: 1.6rem;
-            font-weight: 400;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        .programme-liste ul {
-            list-style: none;
-        }
-        .programme-liste li {
-            padding: 0.4rem 0;
-            border-bottom: 1px dashed #f0e9e0;
-            font-size: 0.85rem;
-        }
-        .programme-liste li strong {
-            font-weight: 600;
-        }
-        
-        /* Style pour les titres de section centrés */
-        .section-title {
-            text-align: center;
-            font-weight: bold;
-            margin: 0.5rem 0;
+        .table-modal-card .floral-bg-modal-bl {
+            position: absolute; width: 100px; height: 100px;
+            opacity: 0.12; pointer-events: none;
+            background-size: contain; background-repeat: no-repeat;
+            z-index: 0; bottom: 15px; left: 15px;
+            background-image: url('m2.png');
         }
 
-        .paroles-section {
-            margin-top: 1rem;
-        }
-        .paroles-title {
-            font-family: 'Mistral', cursive;
-            font-size: 1.5rem;
-            font-weight: 400;
-            text-align: center;
-            margin: 1.5rem 0 1rem;
-            position: relative;
-        }
-        .paroles-title::before,
-        .paroles-title::after {
-            content: "❀";
-            font-size: 1.1rem;
-            color: #1e1b1a;
-            margin: 0 10px;
-            opacity: 0.6;
-        }
-
-        .accordion-item {
-            margin-bottom: 1rem;
-            border: 1px solid #e2d9d0;
-            border-radius: 12px;
-            overflow: hidden;
-            background: white;
-            position: relative;
-            transition: box-shadow 0.3s ease;
-            scroll-margin-top: 80px;
-        }
-        .accordion-item::before {
-            content: "❁";
+        .table-modal-vinyl {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background:
+                repeating-radial-gradient(circle at 50% 50%,
+                    transparent 14px, rgba(255,255,255,0.035) 15px,
+                    transparent 17px, rgba(255,255,255,0.025) 20px,
+                    transparent 22px, rgba(255,255,255,0.03) 26px,
+                    transparent 28px, rgba(255,255,255,0.02) 33px, transparent 35px
+                ),
+                radial-gradient(circle at 35% 32%, #333, #0d0d0d);
             position: absolute;
-            left: 12px;
-            top: 12px;
-            font-size: 0.9rem;
-            color: #1e1b1a;
-            opacity: 0.6;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 4px 4px 20px rgba(0,0,0,0.4);
+            z-index: 3;
+            overflow: visible;
+        }
+
+        .vinyl-center-hole {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
             z-index: 2;
-        }
-        .accordion-header {
-            background: #fffcf8;
-            padding: 0.8rem 1rem 0.8rem 2.2rem;
-            cursor: pointer;
-            font-family: 'Mistral', cursive;
-            font-size: 1.2rem;
-            font-weight: 400;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            position: relative;
-            z-index: 1;
+            justify-content: center;
         }
-        .accordion-header span {
+        /* Pas de point noir ici */
+
+        .vinyl-table-num {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-        .accordion-item.open .accordion-header span {
-            transform: rotate(45deg);
-        }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-            padding: 0 1rem;
-            background: #fefcf9;
-            border-top: 1px solid transparent;
-            position: relative;
-        }
-        .accordion-item.open .accordion-content {
-            max-height: 800px;
-            padding: 1rem;
-            border-top-color: #e2d9d0;
-        }
-        .chant-content {
-            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
             font-size: 0.8rem;
-            line-height: 1.5;
-            white-space: pre-line;
-            background: #f9f3ea;
-            padding: 0.8rem;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-        .chant-content strong, .chant-content b {
-            font-weight: 700;
-            color: #1e1b1a;
+            color: #1a1818;
+            z-index: 4;
+            letter-spacing: 0.5px;
         }
 
-        /* Style pour les images florales en arrière-plan */
-        .floral-bg {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            opacity: 0.12;
-            pointer-events: none;
-            background-size: contain;
-            background-repeat: no-repeat;
-            z-index: 1;
+        .table-modal-close {
+            position: absolute; top: 12px; right: 16px;
+            font-size: 24px; font-weight: 300; cursor: pointer;
+            color: #8a8680; font-family: 'Montserrat', sans-serif;
+            z-index: 20; background: none; border: none;
+            padding: 4px 8px; transition: color 0.2s;
         }
+        .table-modal-close:hover { color: #1a1818; }
+
+        .table-modal-table-num { text-align: left; margin-bottom: 0.8rem; }
+        .table-modal-table-badge {
+            display: inline-block; background: #2a2828; color: #f8f4ee;
+            font-family: 'Montserrat', sans-serif; font-weight: 700;
+            font-size: 0.85rem; letter-spacing: 1px;
+            padding: 5px 16px; border-radius: 5px;
+        }
+
+        .table-modal-song-wrapper { text-align: center; margin-bottom: 0.3rem; margin-top: 0.3rem; }
+        .table-modal-song { font-family: 'Georgia', 'Times New Roman', serif; font-size: 1.6rem; font-weight: 700; color: #1a1818; letter-spacing: 1px; }
+
+        .table-modal-artist-line { text-align: center; margin-bottom: 1rem; }
+        .table-modal-artist { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; color: #5a5755; letter-spacing: 1px; }
+
+        .table-modal-divider { height: 2px; background: #d4cec6; margin: 1rem 0; }
+
+        .table-modal-guests {
+            list-style: none; max-height: 400px; overflow-y: auto;
+            padding: 0; text-align: center; position: relative; z-index: 1;
+        }
+        .table-modal-guests::-webkit-scrollbar { width: 5px; }
+        .table-modal-guests::-webkit-scrollbar-track { background: #e8e2da; border-radius: 10px; }
+        .table-modal-guests::-webkit-scrollbar-thumb { background: #b28b5e; border-radius: 10px; }
+        .table-modal-guests li {
+            font-family: 'Montserrat', sans-serif; font-size: 0.9rem;
+            font-weight: 600; color: #1a1818; padding: 0.45rem 0;
+            border-bottom: 1px dashed #e8e2da; text-align: center;
+        }
+
+        /* TABS */
+        .tabs { display: flex; justify-content: center; gap: 0.5rem; margin: 2rem 0 1.5rem; border-bottom: 1px solid #e2d9d0; padding-bottom: 0.5rem; position: sticky; top: 0; background: #faf7f2; z-index: 100; flex-wrap: wrap; }
+        .tab-btn { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.8rem; background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; color: #9b8a7a; transition: all 0.3s ease; border-radius: 30px; }
+        .tab-btn.active { background: #1e1b1a; color: #faf7f2; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+        /* PROGRAMME */
+        .programme-liste { background: white; border: 1px solid #e2d9d0; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .programme-liste h3 { font-family: 'Mistral', cursive; font-size: 1.6rem; font-weight: 400; margin-bottom: 1rem; text-align: center; }
+        .programme-liste ul { list-style: none; }
+        .programme-liste li { padding: 0.4rem 0; border-bottom: 1px dashed #f0e9e0; font-size: 0.85rem; }
+        .programme-liste li strong { font-weight: 600; }
+        .section-title { text-align: center; font-weight: bold; margin: 0.5rem 0; }
+
+        /* PAROLES */
+        .paroles-section { margin-top: 1rem; }
+        .paroles-title { font-family: 'Mistral', cursive; font-size: 1.5rem; font-weight: 400; text-align: center; margin: 1.5rem 0 1rem; position: relative; }
+        .paroles-title::before, .paroles-title::after { content: "❀"; font-size: 1.1rem; color: #1e1b1a; margin: 0 10px; opacity: 0.6; }
+
+        .accordion-item { margin-bottom: 1rem; border: 1px solid #e2d9d0; border-radius: 12px; overflow: hidden; background: white; position: relative; transition: box-shadow 0.3s ease; scroll-margin-top: 80px; }
+        .accordion-item::before { content: "❁"; position: absolute; left: 12px; top: 12px; font-size: 0.9rem; color: #1e1b1a; opacity: 0.6; z-index: 2; }
+        .accordion-header { background: #fffcf8; padding: 0.8rem 1rem 0.8rem 2.2rem; cursor: pointer; font-family: 'Mistral', cursive; font-size: 1.2rem; font-weight: 400; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+        .accordion-header span { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; transition: transform 0.3s ease; }
+        .accordion-item.open .accordion-header span { transform: rotate(45deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; padding: 0 1rem; background: #fefcf9; border-top: 1px solid transparent; position: relative; }
+        .accordion-item.open .accordion-content { max-height: 800px; padding: 1rem; border-top-color: #e2d9d0; }
+        .chant-content { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; line-height: 1.5; white-space: pre-line; background: #f9f3ea; padding: 0.8rem; border-radius: 8px; position: relative; overflow: hidden; z-index: 1; }
+        .chant-content strong, .chant-content b { font-weight: 700; color: #1e1b1a; }
+
+        .floral-bg { position: absolute; width: 100px; height: 100px; opacity: 0.12; pointer-events: none; background-size: contain; background-repeat: no-repeat; z-index: 1; }
         .floral-bg-top-left { top: 5px; left: 5px; background-position: top left; }
         .floral-bg-top-right { top: 5px; right: 5px; background-position: top right; }
         .floral-bg-bottom-left { bottom: 5px; left: 5px; background-position: bottom left; }
         .floral-bg-bottom-right { bottom: 5px; right: 5px; background-position: bottom right; }
-        .floral-bg-center { top: 50%; left: 50%; transform: translate(-50%, -50%); background-position: center; width: 120px; height: 120px; }
+        .floral-bg-center { top: 50%; left: 50%; transform: translate(-50%,-50%); background-position: center; width: 120px; height: 120px; }
 
-        /* NOUVEAU TRAJET - Mini carte animée */
-        .trajet-card {
-            background: white;
-            border: 1px solid #e2d9d0;
-            border-radius: 20px;
-            padding: 1.5rem;
-            position: relative;
-            overflow: visible;
-            background-image: radial-gradient(circle at 10% 20%, rgba(30,27,26,0.02) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        .map-container {
-            position: relative;
-            margin: 1rem 0 1.5rem;
-            min-height: 420px;
-            z-index: 2;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-behavior: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .map-svg {
-            width: 100%;
-            min-width: 580px;
-            height: auto;
-            border-radius: 12px;
-            display: block;
-        }
-        .steps-legend {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px dashed #e2d9d0;
-            position: relative;
-            z-index: 2;
-        }
-        .legend-item {
+        /* TRAJET */
+        .trajet-card { background: white; border: 1px solid #e2d9d0; border-radius: 20px; padding: 1.5rem; position: relative; overflow: visible; }
+        .map-container { position: relative; margin: 1rem 0 1.5rem; min-height: 420px; z-index: 2; overflow-x: auto; overflow-y: hidden; scroll-behavior: auto; -webkit-overflow-scrolling: touch; }
+        .map-svg { width: 100%; min-width: 580px; height: auto; border-radius: 12px; display: block; }
+        .steps-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed #e2d9d0; }
+        .legend-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.65rem; font-family: 'Montserrat', sans-serif; color: #6b5a4e; }
+        .legend-dot { width: 8px; height: 8px; background: #1e1b1a; border-radius: 50%; }
+        .legend-car { font-size: 0.9rem; }
+        .trajet-footer { text-align: center; font-size: 0.7rem; font-family: 'Montserrat', sans-serif; color: #9b8a7a; margin-top: 1rem; font-style: italic; }
+
+        /* MENU */
+        .menu-modern { background: white; border: 1px solid #e2d9d0; border-radius: 24px; padding: 1.5rem; position: relative; overflow: hidden; }
+        .menu-block { margin-bottom: 1.5rem; position: relative; z-index: 1; }
+        .menu-block h3 { font-family: 'Mistral', cursive; font-size: 1.6rem; font-weight: 400; border-bottom: 2px solid #1e1b1a; display: inline-block; margin-bottom: 0.8rem; }
+        .menu-block ul { list-style: none; }
+        .menu-block li { padding: 0.3rem 0; border-bottom: 1px dashed #e2d9d0; display: flex; justify-content: space-between; font-size: 0.85rem; }
+        .accomp { background: #f9f3ea; padding: 0.7rem; border-radius: 16px; text-align: center; font-style: italic; margin: 1rem 0; }
+
+        /* GRILLE TABLES — disques vinyles avec chiffres NORMAUX (pas de point noir) */
+        .tables-vinyl-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 1rem 0; }
+
+        .vinyl-btn {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background:
+                repeating-radial-gradient(circle at 50% 50%,
+                    transparent 14px, rgba(255,255,255,0.05) 15px,
+                    transparent 17px, rgba(255,255,255,0.04) 20px,
+                    transparent 22px, rgba(255,255,255,0.035) 26px,
+                    transparent 28px, rgba(255,255,255,0.025) 33px, transparent 35px
+                ),
+                radial-gradient(circle at 35% 32%, #3a3a3a, #111);
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            font-size: 0.65rem;
-            font-family: 'Montserrat', sans-serif;
-            color: #6b5a4e;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.08);
+            position: relative;
+            border: none;
+            outline: none;
         }
-        .legend-dot {
-            width: 8px;
-            height: 8px;
-            background: #1e1b1a;
+
+        .vinyl-btn .v-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 6px rgba(0,0,0,0.3);
+            z-index: 1;
         }
-        .legend-car {
-            font-size: 0.9rem;
-        }
-        .trajet-footer {
-            text-align: center;
-            font-size: 0.7rem;
+
+        /* Pas de point noir (v-hole supprimé) */
+
+        .vinyl-btn .v-num {
+            position: relative;
+            z-index: 4;
             font-family: 'Montserrat', sans-serif;
-            color: #9b8a7a;
-            margin-top: 1rem;
-            font-style: italic;
-            position: relative;
-            z-index: 2;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: #1a1818;
+            letter-spacing: 0.5px;
+            background: transparent;
         }
 
-        .menu-modern {
-            background: white;
-            border: 1px solid #e2d9d0;
-            border-radius: 24px;
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .menu-block {
-            margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-        .menu-block h3 {
-            font-family: 'Mistral', cursive;
-            font-size: 1.6rem;
-            font-weight: 400;
-            border-bottom: 2px solid #1e1b1a;
-            display: inline-block;
-            margin-bottom: 0.8rem;
-        }
-        .menu-block ul {
-            list-style: none;
-        }
-        .menu-block li {
-            padding: 0.3rem 0;
-            border-bottom: 1px dashed #e2d9d0;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-        }
-        .accomp {
-            background: #f9f3ea;
-            padding: 0.7rem;
-            border-radius: 16px;
-            text-align: center;
-            font-style: italic;
-            margin: 1rem 0;
-        }
+        .vinyl-btn:hover { transform: scale(1.1) rotate(-5deg); box-shadow: 0 8px 22px rgba(0,0,0,0.45); }
 
-        .photo-order {
-            background: #f9f3ea;
-            padding: 1rem;
-            border-radius: 16px;
-            margin-top: 1.5rem;
-            border: 1px solid #e2d9d0;
-            position: relative;
-            overflow: hidden;
-        }
-        .photo-order::before {
-            content: "❀";
-            position: absolute;
-            left: 10px;
-            top: 5px;
-            font-size: 0.8rem;
-            opacity: 0.5;
-            z-index: 1;
-        }
-        .photo-order::after {
-            content: "❀";
-            position: absolute;
-            right: 10px;
-            bottom: 5px;
-            font-size: 0.8rem;
-            opacity: 0.5;
-            z-index: 1;
-        }
-        .photo-order h4 {
-            font-family: 'Mistral', cursive;
-            font-size: 1.4rem;
-            font-weight: 400;
-            margin-bottom: 0.5rem;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-        .photo-order ul {
-            list-style: none;
-            font-size: 0.8rem;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-        .photo-order li {
-            padding: 0.2rem 0;
-        }
+        /* ORDRE PHOTOS */
+        .photo-order { background: #f9f3ea; padding: 1rem; border-radius: 16px; margin-top: 1.5rem; border: 1px solid #e2d9d0; position: relative; overflow: hidden; }
+        .photo-order::before { content: "❀"; position: absolute; left: 10px; top: 5px; font-size: 0.8rem; opacity: 0.5; z-index: 1; }
+        .photo-order::after { content: "❀"; position: absolute; right: 10px; bottom: 5px; font-size: 0.8rem; opacity: 0.5; z-index: 1; }
+        .photo-order h4 { font-family: 'Mistral', cursive; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem; text-align: center; position: relative; z-index: 1; }
+        .photo-order ul { list-style: none; font-size: 0.8rem; text-align: center; position: relative; z-index: 1; }
+        .photo-order li { padding: 0.2rem 0; }
 
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #d4c9bc;
-            font-family: 'Mistral', cursive;
-            font-size: 1.2rem;
-        }
+        footer { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #d4c9bc; font-family: 'Mistral', cursive; font-size: 1.2rem; }
 
+        @media (max-width: 700px) {
+            .table-modal-outer { max-width: 88vw; }
+            .table-modal-card { width: 82vw; padding: 1.4rem; }
+            .table-modal-vinyl { width: 100px; height: 100px; right: -50px; }
+            .table-modal-song { font-size: 1.3rem; }
+            .table-modal-guests li { font-size: 0.8rem; padding: 0.4rem 0; }
+            .table-modal-table-badge { font-size: 0.75rem; padding: 4px 14px; }
+        }
         @media (max-width: 550px) {
             .container { padding: 1rem 1rem 3rem; }
             .hero h1, .hero h2 { font-size: 2rem; }
             .tab-btn { padding: 0.4rem 0.8rem; font-size: 0.7rem; }
-            .floral-bg { width: 70px; height: 70px; }
-            .map-container { min-height: 380px; }
-            .legend-item { font-size: 0.55rem; }
             .accordion-item { scroll-margin-top: 100px; }
             .modal-caption { font-size: 1rem; }
             .modal-content { max-height: 80vh; }
+            .vinyl-btn { width: 56px; height: 56px; }
+            .vinyl-btn .v-ring { width: 22px; height: 22px; }
+            .vinyl-btn .v-num { font-size: 0.6rem; }
+            .table-modal-outer { max-width: 92vw; }
+            .table-modal-card { width: 85vw; padding: 1.2rem; }
+            .table-modal-vinyl { width: 85px; height: 85px; right: -42px; }
+            .table-modal-song { font-size: 1.1rem; }
+            .table-modal-artist { font-size: 0.7rem; }
+            .table-modal-guests li { font-size: 0.7rem; padding: 0.35rem 0; }
+            .table-modal-guests { max-height: 350px; }
         }
     </style>
 </head>
@@ -582,7 +342,7 @@
             <h1>MAMINIAINA</h1>
             <h2>& FANDRESENA</h2>
         </div>
-        <div class="church">Cathédrale de l’Immaculée Conception Andohalo</div>
+        <div class="church">Cathédrale de l'Immaculée Conception Andohalo</div>
         <div class="date">18.04.2026</div>
         <div class="photo-couple" id="photoCouple">
             <div class="skeleton-loader hidden" id="skeletonLoader">
@@ -591,7 +351,7 @@
         </div>
     </div>
 
-    <!-- MODAL POUR AGRANDIR L'IMAGE AVEC TITRE -->
+    <!-- MODAL IMAGE COUPLE -->
     <div id="imageModal" class="modal">
         <span class="modal-close">&times;</span>
         <div class="modal-content-wrapper">
@@ -600,25 +360,54 @@
         </div>
     </div>
 
+    <!-- MODAL TABLE -->
+    <div id="tableModal" class="table-modal">
+        <div class="table-modal-outer">
+            <div class="table-modal-card">
+                <div class="floral-bg-modal-tr"></div>
+                <div class="floral-bg-modal-bl"></div>
+                <span class="table-modal-close">&times;</span>
+                <div class="table-modal-table-num">
+                    <span class="table-modal-table-badge" id="tableModalTitle">• TABLE 1 :</span>
+                </div>
+                <div class="table-modal-song-wrapper">
+                    <span class="table-modal-song" id="tableModalSong">ZANAKO VAVY</span>
+                </div>
+                <div class="table-modal-artist-line">
+                    <span class="table-modal-artist" id="tableModalArtist">(MAHALEO)</span>
+                </div>
+                <div class="table-modal-divider"></div>
+                <ul class="table-modal-guests" id="tableModalGuests"></ul>
+            </div>
+            <div class="table-modal-vinyl">
+                <div class="vinyl-center-hole">
+                    <span class="vinyl-table-num" id="vinylTableNum">I</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="tabs">
         <button class="tab-btn active" data-tab="programme">✦ Programme</button>
         <button class="tab-btn" data-tab="trajet">✦ Trajet</button>
         <button class="tab-btn" data-tab="menu">✦ Menu</button>
+        <button class="tab-btn" data-tab="tables">✦ Tables</button>
     </div>
 
+    <!-- PROGRAMME -->
     <div id="programme" class="tab-content active">
         <div class="programme-liste">
             <h3>✦ FANDAHARAM-POTOANA</h3>
             <ul>
-                <li><strong>Entrée des mariés :</strong> Hymne à l’amour</li>
-                <li><strong>Tononkira fidirana :</strong> Injay fa miantso ahy, ny feon’ny fitiavana</li>
+                <li><strong>Entrée des mariés :</strong> Hymne à l'amour</li>
+                <li><strong>Tononkira fidirana :</strong> Injay fa miantso ahy, ny feon'ny fitiavana</li>
                 <li><strong>Fifonana :</strong> Natsangan-dRae ho zandrinao añay</li>
-                <li class="section-title"><strong>FANKALAZANA NY TENIN’ANDRIAMANITRA</strong></li>
-                <li><strong>Vakiteny 1 :</strong> Tononk. 2, 8-10. 14. 16a ; 8, 6-7a — “Mahery toy ny fahafatesana ny fitiavana.”</li>
+                <li class="section-title"><strong>FANKALAZANA NY TENIN'ANDRIAMANITRA</strong></li>
+                <li><strong>Vakiteny 1 :</strong> Tononk. 2, 8-10. 14. 16a ; 8, 6-7a — "Mahery toy ny fahafatesana ny fitiavana."</li>
                 <li><strong>Salamo :</strong> Ny teninao Andriamanitra o (1 couplet et refrain)</li>
-                <li><strong>Vakiteny 2 :</strong> 1 Kôr. 12, 31 — 13, 8a — “Raha tsy manana fitiavana aho, dia tsy misy inoninona mahasoa ahy.”</li>
+                <li><strong>Vakiteny 2 :</strong> 1 Kôr. 12, 31 — 13, 8a — "Raha tsy manana fitiavana aho, dia tsy misy inoninona mahasoa ahy."</li>
                 <li><strong>Fihobiana ny Evanjely :</strong> Aleloia, raisinay ny tenin-janahary eia</li>
-                <li><strong>Evanjely :</strong> Mt. 19, 3-6 — “Aoka izay nakamban’Andriamanitra tsy hosarahin’ny olona.”</li>
+                <li><strong>Evanjely :</strong> Mt. 19, 3-6 — "Aoka izay nakamban'Andriamanitra tsy hosarahin'ny olona."</li>
                 <li><strong>Toriteny</strong></li>
                 <li><strong>Ranombavaka :</strong> Ray o, ny anio sy ny ampitso izay anao raha sitrakao</li>
                 <li class="section-title"><strong>FANAMASINANA NY FANAMBADIANA</strong></li>
@@ -630,11 +419,11 @@
                 <li><strong>Fiadanana :</strong> Homba antsika mianakavy anie</li>
                 <li><strong>Zanak'ondry :</strong> Anak'Agnondrin'Andrianagnahary</li>
                 <li><strong>Komonio :</strong> Indray hariva izay</li>
-                <li><strong>Fisaorana :</strong> Matoa gn’olo mifiopioke</li>
+                <li><strong>Fisaorana :</strong> Matoa gn'olo mifiopioke</li>
                 <li><strong>Fanaterana voninkazo :</strong> Ave Maria (La Chorale)</li>
-                <li><strong>Kabary :</strong> Fisaorana ataon’ny FIANAKAVIANA</li>
+                <li><strong>Kabary :</strong> Fisaorana ataon'ny FIANAKAVIANA</li>
                 <li><strong>Fanirahana :</strong> Trouver dans ma vie ta présence, tenir une lampe allumée</li>
-                <li><strong>Sortie des mariés :</strong> Can’t take my Eyes off You</li>
+                <li><strong>Sortie des mariés :</strong> Can't take my Eyes off You</li>
                 <li><strong>Fin cérémonie :</strong> LA Chorale</li>
             </ul>
         </div>
@@ -642,16 +431,15 @@
         <div class="paroles-section">
             <div class="paroles-title">Paroles des chants & prières</div>
 
-            <!-- Injay fa miantso ahy -->
             <div class="accordion-item" id="chant-injay">
                 <div class="accordion-header">✿ Injay fa miantso ahy <span>+</span></div>
                 <div class="accordion-content"><div class="chant-content">
                     <div class="floral-bg floral-bg-bottom-right" style="background-image: url('f1.png');"></div>
-Injay fa miantso ahy, ny feon’ny fitiavana
+Injay fa miantso ahy, ny feon'ny fitiavana
 Manohina ny fiainako, ka tsy azoko handosirana
 Mahery vaika mantsy
 ka tsy azo hampanginina ary tsy azoko handosirana
-Ny feon’ny fitiavana naniraka ny Zanany
+Ny feon'ny fitiavana naniraka ny Zanany
 ho fiainana arahina
 Koa raisiko ny anjarako, hizorako ny lalako.(2)
 
@@ -670,7 +458,6 @@ Fa any ho any kosa hahatsiaro anareo aho
                 </div></div>
             </div>
 
-            <!-- Natsangan-dRae -->
             <div class="accordion-item" id="chant-natsangan">
                 <div class="accordion-header">✿ Natsangan-dRae ho zandrinao añay <span>+</span></div>
                 <div class="accordion-content"><div class="chant-content">
@@ -695,7 +482,6 @@ Tsa tea maro, tsa te hiadañan'ny hafa.
                 </div></div>
             </div>
 
-            <!-- Mofo madio -->
             <div class="accordion-item" id="chant-mofo">
                 <div class="accordion-header">✿ Mofo madio tsy misy lalivay <span>+</span></div>
                 <div class="accordion-content"><div class="chant-content">
@@ -703,16 +489,16 @@ Tsa tea maro, tsa te hiadañan'ny hafa.
 1 - Mofo madio tsy misy lalivay,
 No atolotray Anao
 Mba ekeo, ry Ray, 'ty tolotray,
-Mba ho vatan’ny Zanakao
+Mba ho vatan'ny Zanakao
 Ankasitraho tsara sy ovay,
 Ho sakafo mahay mampiray
-Ho vatan’i Jesoa Kristy,
+Ho vatan'i Jesoa Kristy,
 Hankahery anay
 
 2 - Ranomboaloboky ny sahanay,
 No inty atolotra anao
 Raiso ny divay ary ovay,
-Mba ho Ràn’ilay Zanakao
+Mba ho Ràn'ilay Zanakao
 'Lay Rà nalatsany ho avotray,
 Ka afoiny eto indray izao!
 Hamonjy anay mandrakizay
@@ -720,7 +506,6 @@ Ka mba raiso, ry Ray.
                 </div></div>
             </div>
 
-            <!-- Homba antsika -->
             <div class="accordion-item" id="chant-homba">
                 <div class="accordion-header">✿ Homba antsika mianakavy anie <span>+</span></div>
                 <div class="accordion-content"><div class="chant-content">
@@ -734,7 +519,6 @@ Ka mba raiso, ry Ray.
                 </div></div>
             </div>
 
-            <!-- Anak'Agnondrin -->
             <div class="accordion-item" id="chant-anak">
                 <div class="accordion-header">✿ Anak'Agnondrin'Andrianagnahary <span>+</span></div>
                 <div class="accordion-content"><div class="chant-content">
@@ -756,7 +540,6 @@ Tsy ho trobo mandrakizay
                 </div></div>
             </div>
 
-            <!-- Indray hariva -->
             <div class="accordion-item" id="chant-indray">
                 <div class="accordion-header">✿ Indray hariva izay <span>+</span></div>
                 <div class="accordion-content"><div class="chant-content">
@@ -776,31 +559,29 @@ Ka velona ao Aminao izay mandray Anao
                 </div></div>
             </div>
 
-            <!-- Matoa -->
             <div class="accordion-item" id="chant-matoa">
                 <div class="accordion-header">✿ Matoa gn'olo mifiopioke <span>+</span></div>
                 <div class="accordion-content"><div class="chant-content">
                     <div class="floral-bg floral-bg-top-left" style="background-image: url('f7.png');"></div>
 <strong>Fiv:</strong>
-<strong>Matoa gn’olo mifiopioke ie te hiantsa zay e !</strong>
+<strong>Matoa gn'olo mifiopioke ie te hiantsa zay e !</strong>
 <strong>Fa gny soa nataonao anay, lako zay e !</strong>
 <strong>Tsy voho nandroany fa liany nainay e !</strong>
 <strong>Misaotse, misaotse Anao Baba,</strong>
-<strong>Misaotse Anao gn’havorohotanao</strong>
+<strong>Misaotse Anao gn'havorohotanao</strong>
 
-1 - Gn’ainay maminay io, soa baka Aminao,
+1 - Gn'ainay maminay io, soa baka Aminao,
 Ka ataonay ahoa gny tsy hisaotse Anao ?
 Misaotse Anao,misaotse Anao bevata gny vitanao
 Misaotse Anao,misaotse Anao bevata gny vitanao
 
-2 - Mbo nirahinao bakao, gn’Anaky Tokanao,
+2 - Mbo nirahinao bakao, gn'Anaky Tokanao,
 Ka ataonay ahoa gny tsy hisaotse Anao ?
 Misaotse Anao, misaotse Anao, lisatsy lehe zao
 Misaotse Anao, misaotse Anao, lisatsy lehe zao
                 </div></div>
             </div>
 
-            <!-- Trouver dans ma vie -->
             <div class="accordion-item" id="chant-trouver">
                 <div class="accordion-header">✿ Trouver dans ma vie ta présence <span>+</span></div>
                 <div class="accordion-content"><div class="chant-content">
@@ -836,58 +617,42 @@ Rester et devenir veilleur
                 <li>Mariés et témoins</li>
                 <li>Mariés, parents et grand-mère</li>
                 <li>Mariés et frères et sœurs</li>
-                <li>Mariés et garçons et demoiselles d’honneur</li>
+                <li>Mariés et garçons et demoiselles d'honneur</li>
                 <li>Mariés seuls</li>
             </ul>
         </div>
     </div>
 
+    <!-- TRAJET -->
     <div id="trajet" class="tab-content">
         <div class="trajet-card">
-            <div class="floral-bg floral-bg-top-right" style="background-image: url('f1.png'); z-index: 3;"></div>
-            <div class="floral-bg floral-bg-bottom-left" style="background-image: url('f7.png'); z-index: 3;"></div>
-            
+            <div class="floral-bg floral-bg-top-right" style="background-image:url('f1.png');z-index:3;"></div>
+            <div class="floral-bg floral-bg-bottom-left" style="background-image:url('f7.png');z-index:3;"></div>
             <div class="map-container" id="mapContainer">
                 <svg class="map-svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
                     <rect width="600" height="400" fill="#fefcf9" rx="8" ry="8"/>
-                    
-                    <path id="routeBg" d="M 30,320 Q 150,350 250,270 Q 350,190 450,230 Q 520,260 560,210" 
-                          fill="none" stroke="#e2d9d0" stroke-width="6" stroke-linecap="round"/>
-                    
-                    <path id="routeProgress" d="M 30,320 Q 150,350 250,270 Q 350,190 450,230 Q 520,260 560,210" 
-                          fill="none" stroke="#1e1b1a" stroke-width="4" stroke-linecap="round"
-                          stroke-dasharray="1000" stroke-dashoffset="1000"/>
-                    
+                    <path id="routeBg" d="M 30,320 Q 150,350 250,270 Q 350,190 450,230 Q 520,260 560,210" fill="none" stroke="#e2d9d0" stroke-width="6" stroke-linecap="round"/>
+                    <path id="routeProgress" d="M 30,320 Q 150,350 250,270 Q 350,190 450,230 Q 520,260 560,210" fill="none" stroke="#1e1b1a" stroke-width="4" stroke-linecap="round" stroke-dasharray="1000" stroke-dashoffset="1000"/>
                     <circle cx="30" cy="320" r="7" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="30" y="308" font-size="7" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle" font-weight="bold">Andohalo</text>
-                    
                     <circle cx="88" cy="338" r="5" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="88" y="325" font-size="6.5" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle">Faravohitra</text>
-                    
                     <circle cx="148" cy="344" r="5" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="148" y="332" font-size="6.5" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle">Ankadifotsy</text>
-                    
                     <circle cx="205" cy="330" r="5" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="205" y="318" font-size="6.5" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle">Antanimena</text>
-                    
                     <circle cx="258" cy="295" r="5" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="258" y="283" font-size="6.5" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle">Akorondrano</text>
-                    
                     <circle cx="315" cy="245" r="5" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="315" y="225" font-size="6.5" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle">Ivandry</text>
-                    
                     <circle cx="372" cy="225" r="5" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="372" y="213" font-size="6.5" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle">Tsarasaotra</text>
-                    
                     <circle cx="430" cy="235" r="5" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="430" y="217" font-size="5.5" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle">8km Rajoelina</text>
-                    
                     <circle cx="488" cy="260" r="5" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="488" y="248" font-size="6.5" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle">Ambohimanga</text>
-                    
                     <circle cx="560" cy="210" r="7" fill="#1e1b1a" stroke="#faf7f2" stroke-width="2"/>
                     <text x="560" y="198" font-size="7" fill="#1e1b1a" font-family="Montserrat" text-anchor="middle" font-weight="bold">Espace Ny Tiana</text>
-                    
                     <g id="carGroup">
                         <rect x="-10" y="-8" width="20" height="14" rx="3" fill="#b28b5e" stroke="#1e1b1a" stroke-width="1.5"/>
                         <rect x="-6" y="-4" width="5" height="4" rx="1" fill="#fffcf8" opacity="0.7"/>
@@ -897,285 +662,177 @@ Rester et devenir veilleur
                     </g>
                 </svg>
             </div>
-            
             <div class="steps-legend">
                 <div class="legend-item"><span class="legend-dot"></span> Départ</div>
                 <div class="legend-item"><span class="legend-car">🚗</span> 10 étapes</div>
                 <div class="legend-item"><span class="legend-dot" style="background:#b28b5e;"></span> Arrivée</div>
             </div>
-            <div class="trajet-footer">✿ De la cathédrale au banquet — un chemin d’amour à travers Tana ✿</div>
+            <div class="trajet-footer">✿ De la cathédrale au banquet — un chemin d'amour à travers Tana ✿</div>
         </div>
     </div>
 
+    <!-- MENU -->
     <div id="menu" class="tab-content">
         <div class="menu-modern">
-            <div class="floral-bg floral-bg-top-right" style="background-image: url('f1.png');"></div>
-            <div class="floral-bg floral-bg-bottom-left" style="background-image: url('f7.png');"></div>
-            
+            <div class="floral-bg floral-bg-top-right" style="background-image:url('f1.png');"></div>
+            <div class="floral-bg floral-bg-bottom-left" style="background-image:url('f7.png');"></div>
             <div class="menu-block">
                 <h3>Entrées</h3>
-                <ul><li><span>Cochon de lait</span> <span>✦</span></li><li><span>Salamis, chorizo & condiments</span> <span>✦</span></li><li><span>Fruits de mer & 3 sauces</span> <span>✦</span></li><li><span>Jardinière brocolis, choux-fleurs</span> <span>✦</span></li><li><span>Confit chou rouge balsamique</span> <span>✦</span></li><li><span>Quiche magret fumé</span> <span>✦</span></li><li><span>Foie gras mi-cuit pain d’épices</span> <span>✦</span></li><li><span>Salade poulet fumé, haricots verts</span> <span>✦</span></li><li><span>Tomate mozzarella melon pistou</span> <span>✦</span></li></ul>
+                <ul>
+                    <li><span>Cochon de lait</span> <span>✦</span></li>
+                    <li><span>Salamis, chorizo & condiments</span> <span>✦</span></li>
+                    <li><span>Fruits de mer & 3 sauces</span> <span>✦</span></li>
+                    <li><span>Jardinière brocolis, choux-fleurs</span> <span>✦</span></li>
+                    <li><span>Confit chou rouge balsamique</span> <span>✦</span></li>
+                    <li><span>Quiche magret fumé</span> <span>✦</span></li>
+                    <li><span>Foie gras mi-cuit pain d'épices</span> <span>✦</span></li>
+                    <li><span>Salade poulet fumé, haricots verts</span> <span>✦</span></li>
+                    <li><span>Tomate mozzarella melon pistou</span> <span>✦</span></li>
+                </ul>
             </div>
             <div class="menu-block">
                 <h3>Plats chauds</h3>
-                <ul><li><span>Dinde Ritra</span> <span>✦</span></li><li><span>Amalona sy henakisoa</span> <span>✦</span></li><li><span>Henan’omby ritra manara-molotra</span> <span>✦</span></li></ul>
+                <ul>
+                    <li><span>Dinde Ritra</span> <span>✦</span></li>
+                    <li><span>Amalona sy henakisoa</span> <span>✦</span></li>
+                    <li><span>Henan'omby ritra manara-molotra</span> <span>✦</span></li>
+                </ul>
                 <div class="accomp">Riz, rougail, piment, achard, romazava</div>
                 <h3>Douceurs</h3>
-                <ul><li><span>Fruits frais</span> <span>✦</span></li><li><span>Verrine mousse 3 chocolats</span> <span>✦</span></li><li><span>Tartelettes</span> <span>✦</span></li><li><span>Brownie chocolat</span> <span>✦</span></li><li><span>Crème renversée caramel</span> <span>✦</span></li><li><span>Café & infusion</span> <span>✦</span></li></ul>
+                <ul>
+                    <li><span>Fruits frais</span> <span>✦</span></li>
+                    <li><span>Verrine mousse 3 chocolats</span> <span>✦</span></li>
+                    <li><span>Tartelettes</span> <span>✦</span></li>
+                    <li><span>Brownie chocolat</span> <span>✦</span></li>
+                    <li><span>Crème renversée caramel</span> <span>✦</span></li>
+                    <li><span>Café & infusion</span> <span>✦</span></li>
+                </ul>
             </div>
+        </div>
+    </div>
+
+    <!-- TABLES -->
+    <div id="tables" class="tab-content">
+        <div style="background:white;border:1px solid #e2d9d0;border-radius:24px;padding:1.5rem;position:relative;overflow:hidden;">
+            <div class="floral-bg floral-bg-top-right" style="background-image:url('f1.png');"></div>
+            <div class="floral-bg floral-bg-bottom-left" style="background-image:url('f7.png');"></div>
+            <div class="tables-vinyl-grid" id="tablesVinylGrid"></div>
         </div>
     </div>
 
     <footer>
         <p>Sena & Mamy — 18.04.2026</p>
         <p>MISAOTRA</p>
-        <p style="font-family:'Montserrat'; font-size:0.7rem;">Misaotra eram-po eran-tsaina amin'ny fitrotroana am-bavaka</p>
+        <p style="font-family:'Montserrat';font-size:0.7rem;">Misaotra eram-po eran-tsaina amin'ny fitrotroana am-bavaka</p>
     </footer>
 </div>
 
 <script>
-    // ==================== CHARGEMENT DE L'IMAGE AVEC ANIMATION ÉLÉGANTE ====================
+    // Chiffres romains pour l'affichage à l'intérieur du modal seulement
+    const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV'];
+
+    const tablesData = {
+        1:{song:"ZANAKO VAVY",artist:"(MAHALEO)",guests:["Parents de la mariée","Rasoarivelo Hanta","Randrianarivelo Raymond","Andrianoelina Christian","Rabenjarivo Vololona","Andrianoelina Angelinah","Mr et Mme Ralaimarindaza","Maromila Jean Baptiste","Mr et Mme Rambolamanana"]},
+        2:{song:"FLY ME TO THE MOON",artist:"(FRANK SINATRA)",guests:["Randrianarivelo Lova","Rasoarivelo Hanta","Ramanoara Francky","Randrianarivelo Raymond","Bodo (dentiste)","Andrianoelina Christian","Famille Ramaroson","Rabenjarivo Vololona","Famille Randrianasolo Daniel"]},
+        3:{song:"LUCKY",artist:"(JASON MRAZ)",guests:["Mr et Mme Mahonjo","Lydie et Marion Zafera","Mr et Mme Robert Gaby","Mr et Mme Serge Lucky","Mr et Mme Luc Randriantsoa","Mr et Mme Hubert Rakotoarison"]},
+        4:{song:"RISK IT ALL",artist:"(BRUNO MARS)",guests:["Mr et Mme Edmond Heurtier","Veronique Tafara","Mr et Mme Bakar","Ramahatombo","Landy","Beby","Julienne","Pierre Heurtier"]},
+        5:{song:"BONBON GASY",artist:"(LOLO SY NY TARINY)",guests:["Eric Rakotomanana","Eric Rakotoniaina","Rivoniaina Andriafidison","Jean Luc Rakotovao","Razakatoanina Achille"]},
+        6:{song:"IF AIN'T GOT YOU",artist:"(ALICIA KEYS)",guests:["Charlotte Razafintsalama","Veromanga Ramasomanana","Famille Razafinjato","Andriamampianina Davidson","Mr et Mme Rakotoary","Ravelomanantsoa Andrianatoandro"]},
+        7:{song:"LES CHAMPS-ÉLYSÉES",artist:"(JOE DASSIN)",guests:["Koloina","Aina","Rohy","Michelle","Fano","Fenohasina","Eric","Alain","Saholilalaina"]},
+        8:{song:"WONDERFUL TONIGHT",artist:"(ERIC CLAPTON)",guests:["Aloys Nizigiyimana","Narindra Razafindrabe","Gaudiose Mujawamariya","Senthilkumar","Negussie Zenna","Tolotra Ranaivoharimanana"]},
+        9:{song:"DIE WITH A SMILE",artist:"(BRUNO MARS)",guests:["Soeurs et Maris","Anjatiana","Ella","Harry & Rindra","Luis Sergei","Rindra Ramasomanana"]},
+        10:{song:"JE L'AIME À MOURIR",artist:"(FRANCIS CABREL)",guests:["Sarobidy","Tsivery","Lova","Telina","Toky","Loren","Ekena","Harih","Teddy","Orelys"]},
+        11:{song:"ANDRO RIRININA",artist:"(MAHALEO)",guests:["Tovo & Miora","Tantely","Enzo","Jamel","Ravaka & Miora","Mbato"]},
+        12:{song:"CAN'T TAKE MY EYES OFF YOU",artist:"(FRANKI VALLI)",guests:["Marius","Haja","Cathiana","Freudo","Berthin"]},
+        13:{song:"STAND BY ME",artist:"(BEN E. KING)",guests:["Marc","Stephanie","Tatany","Florence","Steve","Divid","Miva","Noemie"]},
+        14:{song:"I'LL BE THERE",artist:"(MICHAEL JACKSON)",guests:["Haja et Miora Andrianoelina","Bodo Andrianoelina","Noro Rapanoelina","Hery Rakotomalala","Mamitiana Randriamihajasoa","Rakotomanga Camille"]},
+        15:{song:"CAN YOU FEEL THE LOVE TONIGHT",artist:"(ELTON JOHN)",guests:["Clarita","Jacky","Sohane","Vaniala","Naya","Miaro","Tamby","Laurencia","Koloina","Andrew","Audrey","Alyiah","Maelys","Sahy","Matthieu","Azik","Dinary","Malya"]},
+        16:{song:"TSARA TSO-DRANO",artist:"(MAHALEO)",guests:["Parents du marié","Bebe","Tatie Lala","Tonton Denis","Tonton Haja & Tatie Mamitiana","Tonton Julien & Tatie Rondro","Tonton Julien & Tatie Lolona","Père Abdon"]},
+        17:{song:"MAHERY NY FITIA",artist:"(BESSA)",guests:["Famille Razanamparany","Tonton Parfait & Tatie Cici","Tatie Sola","Tonton Victorien","Tonton Hery & Tatie Clairance","Famille Nasinto Sahondra"]},
+        18:{song:"QUAND JE T'AIME",artist:"(DEMIS ROUSSOS)",guests:["D'Assise & Valérie","Joo Claude & Rosia","Ratianarivo","Erick","Ranja","Dory","Lova & Annie"]},
+        19:{song:"NUMBER ONE",artist:"(CKCKY – MAJESTY – RIMKA)",guests:["Francia","Stanie","Clairia","Joséa","Miangaly","Manjaka","Mijoro","Maminirina","Johane","Tantely kely"]},
+        20:{song:"DIA NIARAKA ISIKA",artist:"(LEVELO)",guests:["Balisama & Henintsoa","Ambinina & Mampionona","Aly & Toky","Tahiry & Miora","Henintsoa","Kevin","Ismaël"]},
+        21:{song:"TARATRA HAZAVANA",artist:"(OLOMBELO RICKY)",guests:["Tonton Alfred & Tatie Haja","Tonton Solofo & Tatie Aurélie","Tatie Jeanne","Tonton Misa & Nofy","Famille Razanajatovo Faly","Tonton Honoré & Tatie Noro"]},
+        22:{song:"IANGOLAO VAITRA",artist:"(LEVELO)",guests:["Tonton Haja & Tatie Ony","Famille Rakotoson Paul","Famille Andrianasolo Denis","Tonton Tantely & Tatie Hoby","Fy & Manento"]},
+        23:{song:"VONINKAZO ADALADALA",artist:"(ERICK MANANA)",guests:["Mahefa & Claudia","Liu & Hoby","Johary & Anja","Ranto & Miray","Ando & Sarah"]},
+        24:{song:"HYMNE À L'AMOUR",artist:"(EDITH PIAF)",guests:["Tonton Jules & Tatie Bakoly","Sandratra mivady","Tonton Mara & Tatie Lalao","Tatie Haingo","Seheno"]},
+        25:{song:"LA BOHÈME",artist:"(CHARLES AZNAVOUR)",guests:["Tsito mivady","Antsa (Zoom) & Fitia","Miary & Mamitiana","Andry & Sariaka","Erick & Nirina"]}
+    };
+
+    const grid = document.getElementById('tablesVinylGrid');
+    const tableModal = document.getElementById('tableModal');
+    const tableModalTitle = document.getElementById('tableModalTitle');
+    const tableModalSong = document.getElementById('tableModalSong');
+    const tableModalArtist = document.getElementById('tableModalArtist');
+    const tableModalGuests = document.getElementById('tableModalGuests');
+    const vinylTableNum = document.getElementById('vinylTableNum');
+    const tableModalClose = document.querySelector('#tableModal .table-modal-close');
+
+    for (let i = 1; i <= 25; i++) {
+        const d = tablesData[i];
+        const btn = document.createElement('button');
+        btn.className = 'vinyl-btn';
+        // Chiffres NORMAUX sur les disques de la grille
+        btn.innerHTML = `
+            <div class="v-ring"></div>
+            <span class="v-num">${i}</span>
+        `;
+        btn.addEventListener('click', () => {
+            tableModalTitle.textContent = '• TABLE ' + i + ' :';
+            tableModalSong.textContent = d.song;
+            tableModalArtist.textContent = d.artist;
+            // Chiffres ROMAINS à l'intérieur du modal
+            vinylTableNum.textContent = romanNumerals[i-1];
+            tableModalGuests.innerHTML = d.guests.map(g => `<li>${g}</li>`).join('');
+            tableModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        grid.appendChild(btn);
+    }
+
+    function closeTableModal() { tableModal.classList.remove('active'); document.body.style.overflow = ''; }
+    tableModalClose.addEventListener('click', closeTableModal);
+    tableModal.addEventListener('click', e => { if (e.target === tableModal) closeTableModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && tableModal.classList.contains('active')) closeTableModal(); });
+
+    // PHOTO COUPLE
     const photoCoupleDiv = document.getElementById('photoCouple');
     const skeletonLoader = document.getElementById('skeletonLoader');
     const imgUrl = 'Mamy_Sena_1016.jpg';
-
-    let loadingTimeout = null;
     let imageLoaded = false;
-
-    function showSkeletonIfSlow() {
-        if (!imageLoaded) {
-            skeletonLoader.classList.remove('hidden');
-        }
-    }
-
-    loadingTimeout = setTimeout(showSkeletonIfSlow, 2000);
-
+    const loadingTimeout = setTimeout(() => { if (!imageLoaded) skeletonLoader.classList.remove('hidden'); }, 2000);
     const tempImage = new Image();
-
-    tempImage.onload = function() {
-        imageLoaded = true;
-        if (loadingTimeout) clearTimeout(loadingTimeout);
-        skeletonLoader.classList.add('hidden');
-        photoCoupleDiv.style.backgroundImage = `url('${imgUrl}')`;
-        setTimeout(() => {
-            photoCoupleDiv.classList.add('image-loaded');
-        }, 50);
-    };
-
-    tempImage.onerror = function() {
-        imageLoaded = true;
-        if (loadingTimeout) clearTimeout(loadingTimeout);
-        skeletonLoader.classList.add('hidden');
-        photoCoupleDiv.style.backgroundColor = '#e6dfd5';
-        setTimeout(() => {
-            photoCoupleDiv.classList.add('image-loaded');
-        }, 50);
-    };
-
+    tempImage.onload = function() { imageLoaded = true; clearTimeout(loadingTimeout); skeletonLoader.classList.add('hidden'); photoCoupleDiv.style.backgroundImage = `url('${imgUrl}')`; setTimeout(() => photoCoupleDiv.classList.add('image-loaded'), 50); };
+    tempImage.onerror = function() { imageLoaded = true; clearTimeout(loadingTimeout); skeletonLoader.classList.add('hidden'); photoCoupleDiv.style.backgroundColor = '#e6dfd5'; setTimeout(() => photoCoupleDiv.classList.add('image-loaded'), 50); };
     tempImage.src = imgUrl;
 
-    // ==================== MODAL POUR L'IMAGE DU COUPLE ====================
+    // MODAL IMAGE
     const modal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
-    const modalClose = document.querySelector('.modal-close');
-    
-    function openModal() {
-        modalImage.src = imgUrl;
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeModal() {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    
-    photoCoupleDiv.addEventListener('click', openModal);
-    modalClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal || e.target.classList.contains('modal-content-wrapper')) {
-            closeModal();
-        }
-    });
-    
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
+    const modalClose = document.querySelector('#imageModal .modal-close');
+    photoCoupleDiv.addEventListener('click', () => { modalImage.src = imgUrl; modal.classList.add('active'); document.body.style.overflow = 'hidden'; });
+    modalClose.addEventListener('click', () => { modal.classList.remove('active'); document.body.style.overflow = ''; });
+    modal.addEventListener('click', e => { if (e.target === modal || e.target.classList.contains('modal-content-wrapper')) { modal.classList.remove('active'); document.body.style.overflow = ''; } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('active')) { modal.classList.remove('active'); document.body.style.overflow = ''; } });
 
-    // ==================== ONGLETS AVEC SCROLL FLUIDE ====================
+    // TABS + SCROLL
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
-    
-    function smoothScrollToElement(element, offset = 80) {
-        if (!element) return;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-        
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-        });
-    }
-    
-    let currentAnimationFrame = null;
-    let currentAnimationStarted = false;
-    
-    const mapContainer = document.getElementById('mapContainer');
-    const pathLength = 1000;
-    const svgWidth = 580;
-    
+    function smoothScrollToElement(el, offset=80) { if (!el) return; const pos = el.getBoundingClientRect().top + window.pageYOffset - offset; window.scrollTo({ top: pos, behavior: 'smooth' }); }
+    let currentAnimationFrame = null, currentAnimationStarted = false;
+    const mapContainer = document.getElementById('mapContainer'), pathLength = 1000, svgWidth = 580;
     function getBezierPoint(t) {
-        if (t <= 0.4) {
-            const t1 = t / 0.4;
-            const cx = 150, cy = 350;
-            const x = Math.pow(1-t1,2)*30 + 2*(1-t1)*t1*cx + Math.pow(t1,2)*250;
-            const y = Math.pow(1-t1,2)*320 + 2*(1-t1)*t1*cy + Math.pow(t1,2)*270;
-            return {x, y};
-        }
-        else if (t <= 0.7) {
-            const t2 = (t - 0.4) / 0.3;
-            const cx = 350, cy = 190;
-            const x = Math.pow(1-t2,2)*250 + 2*(1-t2)*t2*cx + Math.pow(t2,2)*450;
-            const y = Math.pow(1-t2,2)*270 + 2*(1-t2)*t2*cy + Math.pow(t2,2)*230;
-            return {x, y};
-        }
-        else {
-            const t3 = (t - 0.7) / 0.3;
-            const cx = 520, cy = 260;
-            const x = Math.pow(1-t3,2)*450 + 2*(1-t3)*t3*cx + Math.pow(t3,2)*560;
-            const y = Math.pow(1-t3,2)*230 + 2*(1-t3)*t3*cy + Math.pow(t3,2)*210;
-            return {x, y};
-        }
+        if (t <= 0.4) { const t1=t/0.4,cx=150,cy=350; return{x:(1-t1)**2*30+2*(1-t1)*t1*cx+t1**2*250,y:(1-t1)**2*320+2*(1-t1)*t1*cy+t1**2*270}; }
+        else if (t<=0.7) { const t2=(t-0.4)/0.3,cx=350,cy=190; return{x:(1-t2)**2*250+2*(1-t2)*t2*cx+t2**2*450,y:(1-t2)**2*270+2*(1-t2)*t2*cy+t2**2*230}; }
+        else { const t3=(t-0.7)/0.3,cx=520,cy=260; return{x:(1-t3)**2*450+2*(1-t3)*t3*cx+t3**2*560,y:(1-t3)**2*230+2*(1-t3)*t3*cy+t3**2*210}; }
     }
-    
-    function resetTrajetAnimation() {
-        const routeProgress = document.getElementById('routeProgress');
-        const carGroup = document.getElementById('carGroup');
-        
-        if (routeProgress) {
-            routeProgress.style.strokeDashoffset = '1000';
-        }
-        
-        if (carGroup) {
-            const startPos = getBezierPoint(0);
-            carGroup.setAttribute('transform', `translate(${startPos.x}, ${startPos.y}) rotate(0)`);
-        }
-        
-        if (mapContainer) {
-            mapContainer.scrollLeft = 0;
-        }
-        
-        currentAnimationStarted = false;
-    }
-    
-    function startTrajetAnimation() {
-        if (currentAnimationFrame) {
-            cancelAnimationFrame(currentAnimationFrame);
-            currentAnimationFrame = null;
-        }
-        
-        resetTrajetAnimation();
-        
-        const routeProgress = document.getElementById('routeProgress');
-        const carGroup = document.getElementById('carGroup');
-        
-        if (!routeProgress || !carGroup) return;
-        
-        let startTime = null;
-        const duration = 4000;
-        
-        function animate(currentTime) {
-            if (!startTime) startTime = currentTime;
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(1, elapsed / duration);
-            
-            const dashoffset = pathLength * (1 - progress);
-            routeProgress.style.strokeDashoffset = dashoffset;
-            
-            const pos = getBezierPoint(progress);
-            
-            let angle = 0;
-            if (progress < 0.99) {
-                const pos2 = getBezierPoint(Math.min(1, progress + 0.01));
-                const dx = pos2.x - pos.x;
-                const dy = pos2.y - pos.y;
-                angle = Math.atan2(dy, dx) * 180 / Math.PI;
-            }
-            
-            carGroup.setAttribute('transform', `translate(${pos.x}, ${pos.y}) rotate(${angle})`);
-            
-            if (mapContainer && progress > 0.05) {
-                const containerWidth = mapContainer.clientWidth;
-                let targetScroll = pos.x - (containerWidth / 2);
-                targetScroll = Math.max(0, Math.min(targetScroll, svgWidth - containerWidth));
-                mapContainer.scrollLeft = targetScroll;
-            }
-            
-            if (progress < 1) {
-                currentAnimationFrame = requestAnimationFrame(animate);
-            } else {
-                currentAnimationStarted = true;
-                currentAnimationFrame = null;
-            }
-        }
-        
-        currentAnimationFrame = requestAnimationFrame(animate);
-        currentAnimationStarted = true;
-    }
-    
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabId = btn.dataset.tab;
-            
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-            
-            const targetContent = document.getElementById(tabId);
-            if (targetContent) {
-                setTimeout(() => {
-                    smoothScrollToElement(targetContent, 70);
-                }, 100);
-            }
-            
-            if (tabId === 'trajet') {
-                setTimeout(() => {
-                    startTrajetAnimation();
-                }, 200);
-            }
-        });
-    });
-
-    document.querySelectorAll('.accordion-item').forEach(item => {
-        const header = item.querySelector('.accordion-header');
-        header.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
-            item.classList.toggle('open');
-            
-            if (item.classList.contains('open')) {
-                setTimeout(() => {
-                    smoothScrollToElement(item, 90);
-                }, 150);
-            }
-        });
-    });
-    
-    const trajetObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && document.getElementById('trajet').classList.contains('active')) {
-                if (!currentAnimationStarted) {
-                    startTrajetAnimation();
-                }
-            }
-        });
-    }, { threshold: 0.3 });
-    
+    function resetTrajetAnimation() { const rp=document.getElementById('routeProgress'),cg=document.getElementById('carGroup'); if(rp)rp.style.strokeDashoffset='1000'; if(cg){const s=getBezierPoint(0);cg.setAttribute('transform',`translate(${s.x},${s.y}) rotate(0)`);} if(mapContainer)mapContainer.scrollLeft=0; currentAnimationStarted=false; }
+    function startTrajetAnimation() { if(currentAnimationFrame)cancelAnimationFrame(currentAnimationFrame); resetTrajetAnimation(); const rp=document.getElementById('routeProgress'),cg=document.getElementById('carGroup'); if(!rp||!cg)return; let startTime=null; const duration=4000; function animate(ct){if(!startTime)startTime=ct; const progress=Math.min(1,(ct-startTime)/duration); rp.style.strokeDashoffset=pathLength*(1-progress); const pos=getBezierPoint(progress); let angle=0; if(progress<0.99){const p2=getBezierPoint(Math.min(1,progress+0.01));angle=Math.atan2(p2.y-pos.y,p2.x-pos.x)*180/Math.PI;} cg.setAttribute('transform',`translate(${pos.x},${pos.y}) rotate(${angle})`); if(mapContainer&&progress>0.05){const cw=mapContainer.clientWidth;mapContainer.scrollLeft=Math.max(0,Math.min(pos.x-cw/2,svgWidth-cw));} if(progress<1)currentAnimationFrame=requestAnimationFrame(animate); else{currentAnimationStarted=true;currentAnimationFrame=null;}} currentAnimationFrame=requestAnimationFrame(animate); currentAnimationStarted=true; }
+    tabBtns.forEach(btn => { btn.addEventListener('click', () => { const tabId=btn.dataset.tab; tabBtns.forEach(b=>b.classList.remove('active')); tabContents.forEach(c=>c.classList.remove('active')); btn.classList.add('active'); document.getElementById(tabId).classList.add('active'); setTimeout(()=>smoothScrollToElement(document.getElementById(tabId),70),100); if(tabId==='trajet')setTimeout(()=>startTrajetAnimation(),200); }); });
+    document.querySelectorAll('.accordion-item').forEach(item => { item.querySelector('.accordion-header').addEventListener('click', e => { e.stopPropagation(); item.classList.toggle('open'); if(item.classList.contains('open'))setTimeout(()=>smoothScrollToElement(item,90),150); }); });
+    const trajetObserver = new IntersectionObserver(entries => { entries.forEach(entry => { if(entry.isIntersecting&&document.getElementById('trajet').classList.contains('active')&&!currentAnimationStarted)startTrajetAnimation(); }); }, {threshold:0.3});
     const trajetCard = document.querySelector('.trajet-card');
-    if (trajetCard) trajetObserver.observe(trajetCard);
+    if(trajetCard)trajetObserver.observe(trajetCard);
 </script>
 </body>
 </html>
