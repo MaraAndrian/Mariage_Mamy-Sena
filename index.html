@@ -726,35 +726,36 @@ Rester et devenir veilleur
 
 <script>
     // Chiffres romains pour l'affichage à l'intérieur du modal seulement
-    const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV'];
+    const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV', 'XXVI'];
 
     const tablesData = {
-        1:{song:"ZANAKO VAVY",artist:"(MAHALEO)",guests:["Parents de la mariée","Rasoarivelo Hanta","Randrianarivelo Raymond","Andrianoelina Christian","Rabenjarivo Vololona","Andrianoelina Angelinah","Mr et Mme Ralaimarindaza","Maromila Jean Baptiste","Mr et Mme Rambolamanana"]},
-        2:{song:"FLY ME TO THE MOON",artist:"(FRANK SINATRA)",guests:["Randrianarivelo Lova","Ramanoara Francky","Bodo (dentiste)","Famille Ramaroson","Famille Randrianasolo Daniel"]},
-        3:{song:"LUCKY",artist:"(JASON MRAZ)",guests:["Mr et Mme Mahonjo","Lydie et Marion Zafera","Mr et Mme Robert Gaby","Mr et Mme Serge Lucky","Mr et Mme Luc Randriantsoa","Mr et Mme Hubert Rakotoarison"]},
-        4:{song:"RISK IT ALL",artist:"(BRUNO MARS)",guests:["Mr et Mme Edmond Heurtier","Veronique Tafara","Mr et Mme Bakar","Ramahatombo","Landy","Beby","Julienne","Pierre Heurtier"]},
-        5:{song:"BONBON GASY",artist:"(LOLO SY NY TARINY)",guests:["Eric Rakotomanana","Eric Rakotoniaina","Rivoniaina Andriafidison","Jean Luc Rakotovao","Razakatoanina Achille"]},
-        6:{song:"IF AIN'T GOT YOU",artist:"(ALICIA KEYS)",guests:["Charlotte Razafintsalama","Veromanga Ramasomanana","Famille Razafinjato","Andriamampianina Davidson","Mr et Mme Rakotoary","Ravelomanantsoa","Andrianatoandro"]},
+		1:{song:"ZANAKO VAVY",artist:"(MAHALEO)",guests:["Parents de la mariée","Mr Randrianarivelo Raymond","Mr et Mme Maromiha Jean Baptiste","Mme Rahatanirina Pernelle","Mr Andrianoelina Christian","Mme Rabenjarivo Vololona","Mme Harinoelina Angelina","Mr et Mme Ralaimarindaza","Mr et Mme Rambolamanana"]},
+        2:{song:"FLY ME TO THE MOON",artist:"(FRANK SINATRA)",guests:["Mr et Mme Francky Ramanoara","Mr et Mme Tiana Razafimaharavo","Mme Randrianarivelo Lovaniaina","Famille Ramaroson","Famille Randrianasolo Daniel"]},
+        3:{song:"LUCKY",artist:"(JASON MRAZ)",guests:["Mr et Mme Mahonjo Hugues","Mmes Lydie et Marion Zafera","Mr et Mme Robert Gaby","Mr et Mme Serge Randriantsoa","Mr et Mme Luc Randriantsoa","Mr et Mme Hubert Rakotoarison"]},
+        4:{song:"RISK IT ALL",artist:"(BRUNO MARS)",guests:["Mr et Mme Edmond Heurtier","Mme Veronique Heurtier","Mr et Mme Bakar","Mr et Mme Ramahatombo","Mr Pierre Heurtier","Tatie Landy","Tatie Beby","Mme Julienne"]},
+        5:{song:"BONBON GASY",artist:"(LOLO SY NY TARINY)",guests:["Mr et Mme Eric Rakotomanana","Mr et Mme Eric Rakotoniaina","Mr et Mme Rivoniaina Andriafidison","Mr et Mme Rakotovao Jean Luc","Mr et Mme Razakatoanina Achille"]},
+        6:{song:"IF I AIN'T GOT YOU",artist:"(ALICIA KEYS)",guests:["Mme Charlotte Razafintsalama","Mme Veromanga Ramasomanana","Famille Razafinjato","Mr et Mme Andriamampianina Davidson","Mr et Mme Jean Chrisostome Rakotoary","Mr et Mme Ravelomanantsoa Andrianatoandro"]},
         7:{song:"LES CHAMPS-ÉLYSÉES",artist:"(JOE DASSIN)",guests:["Koloina","Aina","Rohy","Michelle","Fano","Fenohasina","Eric","Alain","Saholilalaina"]},
-        8:{song:"WONDERFUL TONIGHT",artist:"(ERIC CLAPTON)",guests:["Aloys Nizigiyimana","Narindra Razafindrabe","Gaudiose Mujawamariya","Senthilkumar","Negussie Zenna","Tolotra Ranaivoharimanana"]},
-        9:{song:"DIE WITH A SMILE",artist:"(BRUNO MARS)",guests:["Soeurs et Maris","Anjatiana","Ella","Harry & Rindra","Luis Sergei","Rindra Ramasomanana"]},
+        8:{song:"WONDERFUL TONIGHT",artist:"(ERIC CLAPTON)",guests:["Mr et Mme Aloys Nizigiyimana","Mr et Mme Gaudiose Mujawamariya","Mr et Mme Senthilkumar","Mr et Mme Negussie Zenna","Mr et Mme Tolotra Ranaivoharimanana","Mr et Mme Narindra Razafindrabe"]},
+        9:{song:"DIE WITH A SMILE",artist:"(BRUNO MARS)",guests:["Bride’s siblings","Harry & Rindra","Anjatiana","Ella","Luis Sergei","Rindra Ramasomanana"]},
         10:{song:"JE L'AIME À MOURIR",artist:"(FRANCIS CABREL)",guests:["Sarobidy","Tsivery","Lova","Telina","Toky","Loren","Ekena","Harih","Teddy","Orelys"]},
-        11:{song:"ANDRO RIRININA",artist:"(MAHALEO)",guests:["Tovo & Miora","Tantely","Enzo","Jamel","Ravaka & Miora","Mbato"]},
-        12:{song:"CAN'T TAKE MY EYES OFF YOU",artist:"(FRANKI VALLI)",guests:["Marius","Haja","Cathiana","Freudo","Berthin"]},
-        13:{song:"STAND BY ME",artist:"(BEN E. KING)",guests:["Marc","Stephanie","Tatany","Florence","Steve","Divid","Miva","Noemie"]},
-        14:{song:"I'LL BE THERE",artist:"(MICHAEL JACKSON)",guests:["Haja et Miora Andrianoelina","Bodo Andrianoelina","Noro Rapanoelina","Hery Rakotomalala","Mamitiana Randriamihajasoa","Rakotomanga Camille"]},
-        15:{song:"CAN YOU FEEL THE LOVE TONIGHT",artist:'(ELTON JOHN "THE LION KING")',guests:["Clarita","Jacky","Sohane","Vaniala","Naya","Miaro","Tamby","Laurencia","Koloina","Andrew","Audrey","Alyiah","Maelys","Sahy","Matthieu","Azik","Dinary","Malya"]},
+        11:{song:"ANDRO RIRININA",artist:"(MAHALEO)",guests:["Mr et Mme Andriamanamisata Tantely","Mr Rakotomanga Enzo","Mr et Mme Jamel Mamy","Mr et Mme Andriamifidy Ravaka","Mr et Mme Rapanoelina Mbato","Mr et Mme Hery Rakotomalala"]},
+        12:{song:"CAN'T TAKE MY EYES OFF YOU",artist:"(FRANKI VALLI)",guests:["Mr et Mme Geranco","Mr et Mme Haja","Mr et Mme Nicolessi Marius","Mr et Mme Bakar Man Freudo","Mr et Mme Berthin"]},
+        13:{song:"STAND BY ME",artist:"(BEN E. KING)",guests:["Marc","Stephanie","Tatany","Florence","Steve","Divid (2)","Jean-Yves (2)","Noémie","Jacky","Clarita"]},
+        14:{song:"I'LL BE THERE",artist:"(MICHAEL JACKSON)",guests:["Mr et Mme Hajarimino Rakotomanana","Mme Bodo Andriantsararafa","Mme Noro Rapanoelina","Mr et Mme Andrianoelina Tovo","Mr et Mme Mamitiana Randriamihajasoa","Mr et Mme Rakotomanga Camille"]},
+        15:{song:"CAN YOU FEEL THE LOVE TONIGHT",artist:'(ELTON JOHN "THE LION KING")',guests:["Sohane","Vaniala","Naya","Miaro","Tamby","Laurencia","Koloina","Andrew","Maelys","Sahy","Matthieu","Hazig","Dinary","Malya","Audrey","Alyiah"]},
         16:{song:"TSARA TSO-DRANO",artist:"(MAHALEO)",guests:["Parents du marié","Bebe","Tatie Lala","Tonton Denis","Tonton Haja & Tatie Mamitiana","Tonton Julien & Tatie Rondro","Tonton Julien & Tatie Lolona","Père Abdon"]},
         17:{song:"MAHERY NY FITIA",artist:"(BESSA)",guests:["Famille Razanamparany","Tonton Parfait & Tatie Cici","Tatie Sola","Tonton Victorien","Tonton Hery & Tatie Clairance","Famille Nasinto Sahondra"]},
         18:{song:"QUAND JE T'AIME",artist:"(DEMIS ROUSSOS)",guests:["D'Assise & Valérie","Joo Claude & Rosia","Ratianarivo","Erick","Ranja","Dory","Lova & Annie"]},
-        19:{song:"NUMBER ONE",artist:"(CKCKY – MAJESTY – RIMKA)",guests:["Francia","Stanie","Clairia","Joséa","Miangaly","Manjaka","Mijoro","Maminirina","Johane","Tantely kely"]},
+        19:{song:"NUMBER ONE",artist:"(CKYCKY – MAJESTY – RIMKA)",guests:["Francia","Stanie","Clairia","Joséa","Miangaly","Manjaka","Mijoro","Maminirina","Johane","Tantely kely"]},
         20:{song:"DIA NIARAKA ISIKA",artist:"(LEVELO)",guests:["Balisama & Henintsoa","Ambinina & Mampionona","Aly & Toky","Tahiry & Miora","Henintsoa","Kevin","Ismaël"]},
         21:{song:"TARATRA HAZAVANA",artist:"(OLOMBELO RICKY)",guests:["Tonton Alfred & Tatie Haja","Tonton Solofo & Tatie Aurélie","Tatie Jeanne","Tonton Misa & Nofy","Famille Razanajatovo Faly","Tonton Honoré & Tatie Noro"]},
         22:{song:"IANGOLAO VAITRA",artist:"(LEVELO)",guests:["Tonton Haja & Tatie Ony","Famille Rakotoson Paul","Famille Andrianasolo Denis","Tonton Tantely & Tatie Hoby","Fy & Manento"]},
         23:{song:"VONINKAZO ADALADALA",artist:"(ERICK MANANA)",guests:["Mahefa & Claudia","Liu & Hoby","Johary & Anja","Ranto & Miray","Ando & Sarah"]},
         24:{song:"HYMNE À L'AMOUR",artist:"(EDITH PIAF)",guests:["Tonton Jules & Tatie Bakoly","Sandratra mivady","Tonton Mara & Tatie Lalao","Tatie Haingo","Seheno"]},
-        25:{song:"LA BOHÈME",artist:"(CHARLES AZNAVOUR)",guests:["Tsito mivady","Antsa (Zoom) & Fitia","Miary & Mamitiana","Andry & Sariaka","Erick & Nirina"]}
-    };
+        25:{song:"LA BOHÈME",artist:"(CHARLES AZNAVOUR)",guests:["Tsito mivady","Antsa (Zoom) & Fitia","Miary & Mamitiana","Andry & Sariaka","Erick & Nirina"]},
+        26:{song:"YOU’LL BE IN MY HEART",artist:'(PHIL COLLINS "TARZAN")',guests:["Reyan","Enzo","Cassie","Naomie","Nathan","Tiona","Caleb","Sayan","Maylane","Mayron","Nitiako","Niaiko"]}
+	};
 
     const grid = document.getElementById('tablesVinylGrid');
     const tableModal = document.getElementById('tableModal');
@@ -765,7 +766,7 @@ Rester et devenir veilleur
     const vinylTableNum = document.getElementById('vinylTableNum');
     const tableModalClose = document.querySelector('#tableModal .table-modal-close');
 
-    for (let i = 1; i <= 25; i++) {
+    for (let i = 1; i <= 26; i++) {
         const d = tablesData[i];
         const btn = document.createElement('button');
         btn.className = 'vinyl-btn';
